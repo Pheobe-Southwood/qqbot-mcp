@@ -1,6 +1,6 @@
 {
   "name": "qqbot-mcp",
-  "version": "0.2.3",
+  "version": "0.2.2",
   "description": "把 QQ 官方机器人 OpenAPI 封装成 MCP 服务和中文交互式 CLI。",
   "license": "MIT",
   "type": "module",
