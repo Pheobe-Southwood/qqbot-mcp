@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "qqbot": {
+      "command": "npx",
+      "args": ["-y", "qqbot-mcp", "--mcp"],
+      "env": {
+        "QQBOT_APP_ID": "102xxxxxx",
+        "QQBOT_APP_SECRET": "replace-me",
+        "QQBOT_MCP_MODE": "read",
+        "QQBOT_MCP_UPLOAD_ROOT": "/srv/qqbot-files",
+        "QQBOT_MCP_DOWNLOAD_DIR": "/var/lib/qqbot-mcp/downloads",
+        "QQBOT_MCP_EVENT_TRANSPORT": "off"
+      }
+    }
+  }
+}

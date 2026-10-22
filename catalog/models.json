@@ -1,0 +1,112 @@
+{
+  "_note": "Shared request-body structures referenced by name in QQ docs. Used by scripts/sync-catalog.mjs to resolve types that the doc page does not inline (mostly server-inter pages). Keys must match the type names used in the docs.",
+  "MessageMarkdown": {
+    "type": "object",
+    "properties": {
+      "template_id": { "type": "integer", "description": "【已废弃】平台 Markdown 模板 ID" },
+      "content": { "type": "string", "description": "Markdown 内容（原生语法）" },
+      "custom_template_id": { "type": "string", "description": "【已废弃】自定义模板 ID" },
+      "force_verify_image_resource": { "type": "boolean", "description": "为 true 时图片转存失败会报错且不发送消息" }
+    },
+    "additionalProperties": true
+  },
+  "MessageReference": {
+    "type": "object",
+    "properties": {
+      "message_id": { "type": "string", "description": "被引用消息 ID（事件 ext.msg_idx 或发送响应的 ext_info.ref_idx）" }
+    },
+    "additionalProperties": true
+  },
+  "MessageEmbed": {
+    "type": "object",
+    "properties": {
+      "title": { "type": "string", "description": "标题" },
+      "prompt": { "type": "string", "description": "消息通知" },
+      "thumbnail": {
+        "type": "object",
+        "properties": { "url": { "type": "string", "description": "缩略图 URL" } },
+        "additionalProperties": true
+      },
+      "fields": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": { "name": { "type": "string" } },
+          "additionalProperties": true
+        }
+      }
+    },
+    "additionalProperties": true
+  },
+  "MessageArk": {
+    "type": "object",
+    "properties": {
+      "template_id": { "type": "integer", "description": "ARK 模板 ID（可选 23 / 24 / 37，需平台开通）" },
+      "kv": {
+        "type": "array",
+        "description": "模板变量映射：[{key:'#变量#', value:'填充值'}]；数组变量用 obj 嵌套",
+        "items": {
+          "type": "object",
+          "properties": {
+            "key": { "type": "string" },
+            "value": { "type": "string" },
+            "obj": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    "additionalProperties": true
+  },
+  "InputNotify": {
+    "type": "object",
+    "properties": {
+      "input_type": { "type": "integer", "description": "输入状态类型，1 = 正在输入" },
+      "input_second": { "type": "integer", "description": "输入状态持续秒数" }
+    },
+    "additionalProperties": true
+  },
+  "Keyboard": {
+    "type": "object",
+    "properties": {
+      "id": { "type": "string", "description": "平台预设键盘模板 ID（与 content 互斥）" },
+      "content": { "type": "object", "description": "自定义键盘布局 { rows: [{ buttons: [...] }] }", "additionalProperties": true }
+    },
+    "additionalProperties": true
+  },
+  "KeyboardContent": {
+    "type": "object",
+    "properties": {
+      "rows": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "buttons": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "render_data": { "type": "object", "additionalProperties": true },
+                  "action": { "type": "object", "additionalProperties": true },
+                  "group_id": { "type": "string" }
+                },
+                "additionalProperties": true
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    },
+    "additionalProperties": true
+  },
+  "MediaInfo": {
+    "type": "object",
+    "properties": {
+      "file_info": { "type": "string", "description": "来自富媒体上传接口的 file_info" }
+    },
+    "additionalProperties": true
+  }
+}

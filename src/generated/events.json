@@ -1,0 +1,2985 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-22T14:46:43.340Z",
+  "upstream": "https://bot.q.qq.com/wiki/develop/api-v2/",
+  "eventCount": 53,
+  "intents": {
+    "GUILDS": 1,
+    "GUILD_MEMBERS": 2,
+    "GUILD_MESSAGES": 512,
+    "GUILD_MESSAGE_REACTIONS": 1024,
+    "DIRECT_MESSAGE": 4096,
+    "GROUP_AND_C2C_EVENT": 33554432,
+    "INTERACTION": 67108864,
+    "MESSAGE_AUDIT": 134217728,
+    "FORUMS_EVENT": 268435456,
+    "AUDIO_ACTION": 536870912,
+    "PUBLIC_GUILD_MESSAGES": 1073741824
+  },
+  "events": [
+    {
+      "name": "C2C_MESSAGE_CREATE",
+      "category": "单聊消息",
+      "summary": "用户单聊发消息给机器人",
+      "description": "用户给机器人发送单聊消息时触发。 为确保消息可达，相同 msg_id 可能重复推送，开发者需结合 msg_seq 做去重。\n为确保消息可达，相同 msg_id 可能重复推送，需结合 message_scene.ext 中的 msg_idx 做去重。message_type 决定消息结构：0=纯文本，3=ARK卡片（ark_data 有值），103=引用消息（msg_elements 有值，message_scene.ext 含 ref_msg_idx）。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/c2c_message_create.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "消息 ID，可用于被动回复和撤回"
+        },
+        {
+          "name": "author",
+          "type": "User",
+          "description": "发送者（user_openid 有值）"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": "消息文本内容"
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "description": "消息发送时间，RFC3339 格式"
+        },
+        {
+          "name": "message_type",
+          "type": "integer",
+          "description": "消息内容类型: 0=普通文本, 3=结构化卡片, 101=并行消息, 102=聊天记录, 103=引用消息"
+        },
+        {
+          "name": "message_scene",
+          "type": "MessageScene",
+          "description": "消息场景上下文（含消息索引、鉴权令牌等）"
+        },
+        {
+          "name": "attachments",
+          "type": "[] MessageAttachment",
+          "description": "消息附件（图片、文件、语音等）"
+        },
+        {
+          "name": "ark_data",
+          "type": "ARKData",
+          "description": "结构化卡片消息数据（message_type=3 时有值）"
+        },
+        {
+          "name": "msg_elements",
+          "type": "[] MsgElement",
+          "description": "消息元素列表（message_type=103 引用消息时包含被引用内容）"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "消息 ID，可用于被动回复和撤回"
+          },
+          "author": {
+            "type": "object",
+            "title": "User",
+            "description": "发送者（user_openid 有值）",
+            "additionalProperties": true
+          },
+          "content": {
+            "type": "string",
+            "description": "消息文本内容"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "消息发送时间，RFC3339 格式"
+          },
+          "message_type": {
+            "type": "integer",
+            "description": "消息内容类型: 0=普通文本, 3=结构化卡片, 101=并行消息, 102=聊天记录, 103=引用消息"
+          },
+          "message_scene": {
+            "type": "object",
+            "title": "MessageScene",
+            "description": "消息场景上下文（含消息索引、鉴权令牌等）",
+            "additionalProperties": true
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "title": "MessageAttachment",
+              "description": "结构见文档：https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/c2c_message_create.html",
+              "additionalProperties": true
+            },
+            "description": "消息附件（图片、文件、语音等）"
+          },
+          "ark_data": {
+            "type": "object",
+            "title": "ARKData",
+            "description": "结构化卡片消息数据（message_type=3 时有值）",
+            "additionalProperties": true
+          },
+          "msg_elements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "title": "MsgElement",
+              "description": "结构见文档：https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/c2c_message_create.html",
+              "additionalProperties": true
+            },
+            "description": "消息元素列表（message_type=103 引用消息时包含被引用内容）"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "id": "ROBOT1.0_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "author": {
+              "id": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+              "user_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+              "union_openid": "",
+              "username": "",
+              "bot": false
+            },
+            "content": "你好，今天有什么推荐的活动吗？",
+            "message_type": 0,
+            "message_scene": {
+              "source": "default",
+              "ext": [
+                "msg_idx=REFIDX_xxxxxxxxxxxxxxx=="
+              ]
+            },
+            "timestamp": "2026-07-21T10:00:00+08:00"
+          }
+        },
+        {
+          "title": "示例2",
+          "body": {
+            "id": "ROBOT1.0_yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+            "author": {
+              "id": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+              "user_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+              "union_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+              "username": "",
+              "bot": false
+            },
+            "content": "[卡片消息] 小程序\n摘要: [每日打卡]快来完成今日学习打卡",
+            "message_type": 3,
+            "ark_data": {
+              "ark_type": "miniapp",
+              "ark_name": "小程序",
+              "prompt": "[每日打卡]快来完成今日学习打卡",
+              "fields": {
+                "title": "快来完成今日学习打卡",
+                "source": "学习助手",
+                "tag": "微信小程序",
+                "preview": "https://pubminishare-30161.picsz.qpic.cn/preview_a1b2c3d4",
+                "source_logo": "https://miniapp.gtimg.cn/generated-icon/app_a1b2c3d4.png",
+                "tag_icon": "https://miniapp.gtimg.cn/public/miniwx.png"
+              }
+            },
+            "message_scene": {
+              "source": "default",
+              "ext": [
+                "msg_idx=REFIDX_yyyyyyyyyyyyyyy=="
+              ]
+            },
+            "timestamp": "2026-07-21T10:01:00+08:00"
+          }
+        },
+        {
+          "title": "示例3",
+          "body": {
+            "id": "ROBOT1.0_zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+            "author": {
+              "id": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6",
+              "user_openid": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6",
+              "union_openid": "",
+              "username": "",
+              "bot": false
+            },
+            "content": "这个建议很有帮助，谢谢你！",
+            "message_type": 103,
+            "msg_elements": [
+              {
+                "msg_idx": "REFIDX_aaaaaaaaaaaaaaa==",
+                "message_type": 103,
+                "content": "每天坚持阅读半小时，一个月后你会发现自己的变化"
+              }
+            ],
+            "message_scene": {
+              "source": "default",
+              "ext": [
+                "ref_msg_idx=REFIDX_aaaaaaaaaaaaaaa==",
+                "msg_idx=REFIDX_zzzzzzzzzzzzzzz=="
+              ]
+            },
+            "timestamp": "2026-07-21T10:02:00+08:00"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "C2C_MSG_RECEIVE",
+      "category": "单聊消息",
+      "summary": "用户在机器人资料卡开启主动消息推送",
+      "description": "用户在机器人资料卡手动开启\"主动消息\"推送开关时触发。\n用户在机器人资料卡手动开启主动消息推送开关时触发。开启后机器人可向该用户发送主动消息。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/c2c_msg_receive.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "操作时间戳（Unix 秒）"
+        },
+        {
+          "name": "openid",
+          "type": "string",
+          "description": "用户 OpenID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "操作时间戳（Unix 秒）"
+          },
+          "openid": {
+            "type": "string",
+            "description": "用户 OpenID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "C2C消息接收开启",
+          "body": {
+            "openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "timestamp": 1784570617
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "C2C_MSG_REJECT",
+      "category": "单聊消息",
+      "summary": "用户在机器人资料卡关闭主动消息推送",
+      "description": "用户在机器人资料卡手动关闭\"主动消息\"推送时触发。\n用户在机器人资料卡手动关闭主动消息推送时触发。关闭后机器人无法向该用户发送主动消息。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/c2c_msg_reject.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "操作时间戳（Unix 秒）"
+        },
+        {
+          "name": "openid",
+          "type": "string",
+          "description": "用户 OpenID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "操作时间戳（Unix 秒）"
+          },
+          "openid": {
+            "type": "string",
+            "description": "用户 OpenID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "C2C消息接收关闭",
+          "body": {
+            "openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "timestamp": 1784570599
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "FRIEND_ADD",
+      "category": "好友",
+      "summary": "用户添加机器人为好友",
+      "description": "通过传 scene_param 中的 callback_data 可区分不同来源的添加好友场景。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/friend_add.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "添加时间戳（Unix 秒）"
+        },
+        {
+          "name": "openid",
+          "type": "string",
+          "description": "用户 OpenID"
+        },
+        {
+          "name": "scene",
+          "type": "integer",
+          "description": "加好友场景值。1000=缺省默认, 1001=网络搜索（全部tab）, 1002=网络搜索（机器人tab）, 1003=群场景, 1004=空间场景, 2001=站内分享资料页, 2002=站外分享资料页, 2003=开发者生成的分享链接（站内）, 2004=开发者生成的分享链接（站外）"
+        },
+        {
+          "name": "scene_param",
+          "type": "string",
+          "description": "开发者自定义的回调数据（callback_data），用于区分不同来源"
+        },
+        {
+          "name": "author",
+          "type": "FriendAuthor",
+          "description": "用户信息"
+        },
+        {
+          "name": "short_code",
+          "type": "string",
+          "description": "机器人分享链接的短链code"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "添加时间戳（Unix 秒）"
+          },
+          "openid": {
+            "type": "string",
+            "description": "用户 OpenID"
+          },
+          "scene": {
+            "type": "integer",
+            "description": "加好友场景值。1000=缺省默认, 1001=网络搜索（全部tab）, 1002=网络搜索（机器人tab）, 1003=群场景, 1004=空间场景, 2001=站内分享资料页, 2002=站外分享资料页, 2003=开发者生成的分享链接（站内）, 2004=开发者生成的分享链接（站外）"
+          },
+          "scene_param": {
+            "type": "string",
+            "description": "开发者自定义的回调数据（callback_data），用于区分不同来源"
+          },
+          "author": {
+            "type": "object",
+            "title": "FriendAuthor",
+            "description": "用户信息",
+            "additionalProperties": true
+          },
+          "short_code": {
+            "type": "string",
+            "description": "机器人分享链接的短链code"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "用户添加好友（网络搜索场景）",
+          "body": {
+            "openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "timestamp": 1784570523,
+            "scene": 1001,
+            "scene_param": "",
+            "author": {
+              "union_openid": "DB85A74E07BA08B5B44CD9ED332FCBD2"
+            }
+          }
+        },
+        {
+          "title": "用户添加好友（开发者分享链接）",
+          "body": {
+            "openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "timestamp": 1784570600,
+            "scene": 2003,
+            "scene_param": "callback_abc123",
+            "author": {
+              "union_openid": "DB85A74E07BA08B5B44CD9ED332FCBD2"
+            }
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "FRIEND_DEL",
+      "category": "好友",
+      "summary": "用户删除机器人好友",
+      "description": "用户删除机器人好友时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/friend_del.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "删除时间戳（Unix 秒）"
+        },
+        {
+          "name": "openid",
+          "type": "string",
+          "description": "用户 OpenID"
+        },
+        {
+          "name": "author",
+          "type": "FriendAuthor",
+          "description": "用户信息"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "删除时间戳（Unix 秒）"
+          },
+          "openid": {
+            "type": "string",
+            "description": "用户 OpenID"
+          },
+          "author": {
+            "type": "object",
+            "title": "FriendAuthor",
+            "description": "用户信息",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "用户删除好友",
+          "body": {
+            "openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "timestamp": 1784570524
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GROUP_AT_MESSAGE_CREATE",
+      "category": "群聊消息",
+      "summary": "用户在群里 @机器人 时收到消息",
+      "description": "用户在群里@机器人发送消息时触发。这是机器人最常接收的事件。 content 字段已自动去除@机器人的前缀。 为确保消息可达，相同 msg_id 可能重复推送，开发者需结合 msg_seq 做去重。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_at_message_create.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "消息 ID，可用于被动回复和撤回"
+        },
+        {
+          "name": "author",
+          "type": "User",
+          "description": "发送者（member_openid 有值）"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": "消息文本内容（已去除@机器人的前缀）"
+        },
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID"
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "description": "消息发送时间，RFC3339 格式"
+        },
+        {
+          "name": "message_type",
+          "type": "integer",
+          "description": "消息内容类型（同 C2C_MESSAGE_CREATE）"
+        },
+        {
+          "name": "message_scene",
+          "type": "MessageScene",
+          "description": "消息场景上下文"
+        },
+        {
+          "name": "attachments",
+          "type": "[] MessageAttachment",
+          "description": "消息附件"
+        },
+        {
+          "name": "mentions",
+          "type": "[] User",
+          "description": "消息中@的用户列表（不含@机器人自身）"
+        },
+        {
+          "name": "ark_data",
+          "type": "ARKData",
+          "description": "结构化卡片消息数据"
+        },
+        {
+          "name": "msg_elements",
+          "type": "[] MsgElement",
+          "description": "消息元素列表"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "消息 ID，可用于被动回复和撤回"
+          },
+          "author": {
+            "type": "object",
+            "title": "User",
+            "description": "发送者（member_openid 有值）",
+            "additionalProperties": true
+          },
+          "content": {
+            "type": "string",
+            "description": "消息文本内容（已去除@机器人的前缀）"
+          },
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "消息发送时间，RFC3339 格式"
+          },
+          "message_type": {
+            "type": "integer",
+            "description": "消息内容类型（同 C2C_MESSAGE_CREATE）"
+          },
+          "message_scene": {
+            "type": "object",
+            "title": "MessageScene",
+            "description": "消息场景上下文",
+            "additionalProperties": true
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "title": "MessageAttachment",
+              "description": "结构见文档：https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_at_message_create.html",
+              "additionalProperties": true
+            },
+            "description": "消息附件"
+          },
+          "mentions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "title": "User",
+              "description": "结构见文档：https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_at_message_create.html",
+              "additionalProperties": true
+            },
+            "description": "消息中@的用户列表（不含@机器人自身）"
+          },
+          "ark_data": {
+            "type": "object",
+            "title": "ARKData",
+            "description": "结构化卡片消息数据",
+            "additionalProperties": true
+          },
+          "msg_elements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "title": "MsgElement",
+              "description": "结构见文档：https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_at_message_create.html",
+              "additionalProperties": true
+            },
+            "description": "消息元素列表"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "id": "ROBOT1.0_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "author": {
+              "id": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+              "member_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+              "member_role": "member",
+              "username": "小明",
+              "bot": false
+            },
+            "content": " /今日天气 ",
+            "group_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+            "message_type": 0,
+            "timestamp": "2026-07-21T10:00:00+08:00",
+            "message_scene": {
+              "source": "default",
+              "ext": [
+                "msg_idx=REFIDX_xxxxxxxxxxxxxxx==",
+                "auth_token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+              ]
+            }
+          }
+        },
+        {
+          "title": "示例2",
+          "body": {
+            "id": "ROBOT1.0_yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+            "author": {
+              "id": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6",
+              "member_openid": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6",
+              "member_role": "member",
+              "username": "小红",
+              "bot": false
+            },
+            "content": " 看看这张风景照 ",
+            "group_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+            "message_type": 0,
+            "timestamp": "2026-07-21T10:05:00+08:00",
+            "attachments": [
+              {
+                "content_type": "image/jpeg",
+                "filename": "photo.jpg",
+                "url": "https://multimedia.nt.qq.com.cn/download?appid=xxx&fileid=xxx&rkey=xxx&spec=0",
+                "width": 1920,
+                "height": 1080,
+                "size": 256000
+              }
+            ],
+            "message_scene": {
+              "source": "default",
+              "ext": [
+                "msg_idx=REFIDX_yyyyyyyyyyyyyyy==",
+                "auth_token=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+              ]
+            }
+          }
+        },
+        {
+          "title": "示例3",
+          "body": {
+            "id": "ROBOT1.0_zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+            "author": {
+              "id": "D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6A1",
+              "member_openid": "D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6A1",
+              "member_role": "owner",
+              "username": "小华",
+              "bot": false
+            },
+            "content": " ",
+            "group_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+            "message_type": 103,
+            "timestamp": "2026-07-21T10:10:00+08:00",
+            "msg_elements": [
+              {
+                "content": "=== 消息 1 ===\n[消息内容] 今天的学习计划已完成\n\n=== 消息 2 ===\n[消息内容] 很棒！继续保持，明天继续加油\n\n=== 消息 3 ===\n[消息内容] 好的，一起进步！"
+              }
+            ],
+            "message_scene": {
+              "source": "default",
+              "ext": [
+                "msg_idx=REFIDX_zzzzzzzzzzzzzzz==",
+                "auth_token=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+                "ref_msg_idx=TMP_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              ]
+            }
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GROUP_MESSAGE_CREATE",
+      "category": "群聊消息",
+      "summary": "群消息全量模式（不要求 @机器人）",
+      "description": "当机器人开启了\"接收所有消息\"功能后，群里的每一条消息（不限于@机器人）都会推送此事件。 各字段含义与 GROUP_AT_MESSAGE_CREATE 完全一致。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_message_create.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "消息 ID，可用于被动回复和撤回"
+        },
+        {
+          "name": "author",
+          "type": "User",
+          "description": "发送者"
+        },
+        {
+          "name": "content",
+          "type": "string",
+          "description": "消息文本内容。 消息中 @ 某成员时，会替换为 <@ + 该成员的 member_openid + > （如 <@7A3B9C1D5E2F4A6B8C0D1E3F5A7B9C2D> ）； 消息中 @全体成员时，会替换为 <@all> 。 被 @ 的成员列表见 mentions 字段"
+        },
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID"
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "description": "消息发送时间，RFC3339 格式"
+        },
+        {
+          "name": "message_type",
+          "type": "integer",
+          "description": "消息内容类型"
+        },
+        {
+          "name": "message_scene",
+          "type": "MessageScene",
+          "description": "消息场景上下文"
+        },
+        {
+          "name": "attachments",
+          "type": "[] MessageAttachment",
+          "description": "消息附件"
+        },
+        {
+          "name": "mentions",
+          "type": "[] User",
+          "description": "消息中@的用户列表"
+        },
+        {
+          "name": "ark_data",
+          "type": "ARKData",
+          "description": "结构化卡片消息数据"
+        },
+        {
+          "name": "msg_elements",
+          "type": "[] MsgElement",
+          "description": "消息元素列表"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "消息 ID，可用于被动回复和撤回"
+          },
+          "author": {
+            "type": "object",
+            "title": "User",
+            "description": "发送者",
+            "additionalProperties": true
+          },
+          "content": {
+            "type": "string",
+            "description": "消息文本内容。 消息中 @ 某成员时，会替换为 <@ + 该成员的 member_openid + > （如 <@7A3B9C1D5E2F4A6B8C0D1E3F5A7B9C2D> ）； 消息中 @全体成员时，会替换为 <@all> 。 被 @ 的成员列表见 mentions 字段"
+          },
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "消息发送时间，RFC3339 格式"
+          },
+          "message_type": {
+            "type": "integer",
+            "description": "消息内容类型"
+          },
+          "message_scene": {
+            "type": "object",
+            "title": "MessageScene",
+            "description": "消息场景上下文",
+            "additionalProperties": true
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "title": "MessageAttachment",
+              "description": "结构见文档：https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_message_create.html",
+              "additionalProperties": true
+            },
+            "description": "消息附件"
+          },
+          "mentions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "title": "User",
+              "description": "结构见文档：https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_message_create.html",
+              "additionalProperties": true
+            },
+            "description": "消息中@的用户列表"
+          },
+          "ark_data": {
+            "type": "object",
+            "title": "ARKData",
+            "description": "结构化卡片消息数据",
+            "additionalProperties": true
+          },
+          "msg_elements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "title": "MsgElement",
+              "description": "结构见文档：https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_message_create.html",
+              "additionalProperties": true
+            },
+            "description": "消息元素列表"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "id": "ROBOT1.0_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "author": {
+              "id": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+              "member_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+              "member_role": "member",
+              "username": "小明",
+              "bot": false
+            },
+            "content": "大家早上好呀",
+            "group_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+            "message_type": 0,
+            "timestamp": "2026-07-21T08:00:00+08:00",
+            "message_scene": {
+              "source": "default",
+              "ext": [
+                "msg_idx=REFIDX_xxxxxxxxxxxxxxx==",
+                "auth_token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+              ]
+            }
+          }
+        },
+        {
+          "title": "示例2",
+          "body": {
+            "id": "ROBOT1.0_yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+            "author": {
+              "id": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6",
+              "member_openid": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6",
+              "member_role": "owner",
+              "username": "小红",
+              "bot": false
+            },
+            "content": "分享一张今天的风景照",
+            "group_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+            "message_type": 0,
+            "timestamp": "2026-07-21T09:30:00+08:00",
+            "attachments": [
+              {
+                "content_type": "image/jpeg",
+                "filename": "photo.jpg",
+                "url": "https://multimedia.nt.qq.com.cn/download?appid=xxx&fileid=xxx&rkey=xxx&spec=0",
+                "width": 1920,
+                "height": 1080,
+                "size": 256000
+              }
+            ],
+            "message_scene": {
+              "source": "default",
+              "ext": [
+                "msg_idx=REFIDX_yyyyyyyyyyyyyyy==",
+                "auth_token=yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+              ]
+            }
+          }
+        },
+        {
+          "title": "示例3",
+          "body": {
+            "id": "ROBOT1.0_zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+            "author": {
+              "id": "D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6A1",
+              "member_openid": "D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6A1",
+              "member_role": "admin",
+              "username": "小华",
+              "bot": false
+            },
+            "content": " ",
+            "group_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+            "message_type": 103,
+            "timestamp": "2026-07-21T10:10:00+08:00",
+            "msg_elements": [
+              {
+                "content": "=== 消息 1 ===\n[消息内容] 今天的学习计划已完成\n\n=== 消息 2 ===\n[消息内容] 很棒！继续保持，明天继续加油\n\n=== 消息 3 ===\n[消息内容] 好的，一起进步！"
+              }
+            ],
+            "message_scene": {
+              "source": "default",
+              "ext": [
+                "msg_idx=REFIDX_zzzzzzzzzzzzzzz==",
+                "auth_token=zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+                "ref_msg_idx=TMP_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+              ]
+            }
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GROUP_ADD_ROBOT",
+      "category": "群管理",
+      "summary": "机器人被添加到群聊",
+      "description": "机器人被添加到群聊时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_add_robot.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "加入时间戳（Unix 秒）"
+        },
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID"
+        },
+        {
+          "name": "op_member_openid",
+          "type": "string",
+          "description": "操作添加机器人进群的群成员 OpenID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "加入时间戳（Unix 秒）"
+          },
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID"
+          },
+          "op_member_openid": {
+            "type": "string",
+            "description": "操作添加机器人进群的群成员 OpenID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "机器人加入群聊",
+          "body": {
+            "group_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "op_member_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "timestamp": 1784570534
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GROUP_DEL_ROBOT",
+      "category": "群管理",
+      "summary": "机器人被移出群聊",
+      "description": "机器人被移出群聊时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_del_robot.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "移除时间戳（Unix 秒）"
+        },
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID"
+        },
+        {
+          "name": "op_member_openid",
+          "type": "string",
+          "description": "操作移除机器人退群的群成员 OpenID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "移除时间戳（Unix 秒）"
+          },
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID"
+          },
+          "op_member_openid": {
+            "type": "string",
+            "description": "操作移除机器人退群的群成员 OpenID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "机器人退出群聊",
+          "body": {
+            "group_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "op_member_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "timestamp": 1784570535
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GROUP_MSG_RECEIVE",
+      "category": "群管理",
+      "summary": "群管理员开启机器人消息通知",
+      "description": "群管理员在机器人资料页操作开启通知时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_msg_receive.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "操作时间戳（Unix 秒）"
+        },
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID"
+        },
+        {
+          "name": "op_member_openid",
+          "type": "string",
+          "description": "操作群成员 OpenID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "操作时间戳（Unix 秒）"
+          },
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID"
+          },
+          "op_member_openid": {
+            "type": "string",
+            "description": "操作群成员 OpenID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "群消息接收开启",
+          "body": {
+            "timestamp": 1784276800,
+            "group_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "op_member_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GROUP_MSG_REJECT",
+      "category": "群管理",
+      "summary": "群管理员关闭机器人消息通知",
+      "description": "群管理员在机器人资料页操作关闭通知时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_msg_reject.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "操作时间戳（Unix 秒）"
+        },
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID"
+        },
+        {
+          "name": "op_member_openid",
+          "type": "string",
+          "description": "操作群成员 OpenID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "操作时间戳（Unix 秒）"
+          },
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID"
+          },
+          "op_member_openid": {
+            "type": "string",
+            "description": "操作群成员 OpenID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "群消息接收关闭",
+          "body": {
+            "timestamp": 1784276810,
+            "group_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "op_member_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GROUP_JOIN_REQUEST",
+      "category": "群管理",
+      "summary": "用户申请加群",
+      "description": "用户申请加群请求触发此事件\n1.只有当机器人是群管理员时才可以收到此事件。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_join_request.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群OpenID"
+        },
+        {
+          "name": "join_request_id",
+          "type": "string",
+          "description": "申请ID,需要在申请接口回传"
+        },
+        {
+          "name": "risk_tips",
+          "type": "string",
+          "description": "安全提示语；可疑消息直接返回 warning_tips；普通消息命中 sec_risk_rules 时返回 top_tips"
+        },
+        {
+          "name": "union_openid",
+          "type": "string",
+          "description": "用户在应用/开放平台下的统一标识（如有）"
+        },
+        {
+          "name": "member_openid",
+          "type": "string",
+          "description": "申请人 openid"
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "description": "申请人昵称"
+        },
+        {
+          "name": "apply_at",
+          "type": "string",
+          "description": "申请时间戳（RFC3339 格式）"
+        },
+        {
+          "name": "apply_source",
+          "type": "string",
+          "description": "申请来源：self_apply 主动申请，invited 被邀请"
+        },
+        {
+          "name": "invited_by",
+          "type": "string",
+          "description": "邀请人 openid（apply_source=invited 时有效）"
+        },
+        {
+          "name": "bot",
+          "type": "boolean",
+          "description": "是否为机器人账号"
+        },
+        {
+          "name": "verify_info",
+          "type": "VerifyInfo",
+          "description": "用户入群验证方式"
+        },
+        {
+          "name": "auto_approved",
+          "type": "AutoAppproved",
+          "description": "自动审批通过的扩展信息, 只有在下行事件中会携带。"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "group_openid": {
+            "type": "string",
+            "description": "群OpenID"
+          },
+          "join_request_id": {
+            "type": "string",
+            "description": "申请ID,需要在申请接口回传"
+          },
+          "risk_tips": {
+            "type": "string",
+            "description": "安全提示语；可疑消息直接返回 warning_tips；普通消息命中 sec_risk_rules 时返回 top_tips"
+          },
+          "union_openid": {
+            "type": "string",
+            "description": "用户在应用/开放平台下的统一标识（如有）"
+          },
+          "member_openid": {
+            "type": "string",
+            "description": "申请人 openid"
+          },
+          "username": {
+            "type": "string",
+            "description": "申请人昵称"
+          },
+          "apply_at": {
+            "type": "string",
+            "description": "申请时间戳（RFC3339 格式）"
+          },
+          "apply_source": {
+            "type": "string",
+            "description": "申请来源：self_apply 主动申请，invited 被邀请"
+          },
+          "invited_by": {
+            "type": "string",
+            "description": "邀请人 openid（apply_source=invited 时有效）"
+          },
+          "bot": {
+            "type": "boolean",
+            "description": "是否为机器人账号"
+          },
+          "verify_info": {
+            "type": "object",
+            "title": "VerifyInfo",
+            "description": "用户入群验证方式",
+            "additionalProperties": true
+          },
+          "auto_approved": {
+            "type": "object",
+            "title": "AutoAppproved",
+            "description": "自动审批通过的扩展信息, 只有在下行事件中会携带。",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "用户申请入群申请",
+          "body": {
+            "group_openid": "30584554AA2BF4E72BD3B8F27A70339D",
+            "join_request_id": "AVKiFWpdy0-q0rfCkpQFbWB9GvX7QPIe9hlsbVeO6TiurrZw1DHP0sXGnbUR4Xm79tKNpfl4zZynxeibVwwUD6h96RqiFB-4V6p5FKGXfqInOuQQSf5WwXr8lyIsn6yeaMwEI1KSuTTMBMNe6WN8bDtKg2REXTcF",
+            "member_openid": "FE003FAF76C4817251FDC128A16753BB",
+            "username": "痞孓小光光╮hw灰",
+            "apply_at": "2026-08-05T16:21:40+08:00",
+            "apply_source": "self_apply",
+            "verify_info": {
+              "method": "verify_message",
+              "verify_message": "就快乐了"
+            }
+          }
+        },
+        {
+          "title": "其他用户邀请用户入群",
+          "body": {
+            "group_openid": "30584554AA2BF4E72BD3B8F27A70339D",
+            "join_request_id": "AZj4L11PQ3oFrs2xf0wyfPmJ-3ONzbTr9MZRnXCSfoGce4KkWIgaTDwtkLXJVBaPx61VW9dzQz041oPt8o-JbBSyIerWVziQp1LaxYQCoyEx8rhffLwfBp5OW1-WL5C5HNji3M9lwDfZO4h_zNT4r0lywGojY4CX",
+            "member_openid": "DE538D0B23260BFEC30EA4A17C3A71B1",
+            "username": "吓唬",
+            "apply_at": "2026-08-05T16:36:32+08:00",
+            "apply_source": "invited",
+            "invited_by": "FE003FAF76C4817251FDC128A16753BB"
+          }
+        },
+        {
+          "title": "用户入群申请自动申请通过",
+          "body": {
+            "group_openid": "30584554AA2BF4E72BD3B8F27A70339D",
+            "join_request_id": "AZ22mGUrkPeeNy6Fzz_raGskCnpnbdy7pIq6pME7XUgS72LOXTH4TxgzGlv3FmAGmNQAelRYYhBZYKgJUEoSgu21rSJVSdKOznbSu6FdXqXvZ10SkpI5fyE_876Va8KSbuLFbWdKa8Rh9nc_hzvZYKZT0_X1W0o4",
+            "member_openid": "FE003FAF76C4817251FDC128A16753BB",
+            "username": "痞孓小光光╮hw灰",
+            "apply_at": "2026-08-05T17:32:52+08:00",
+            "apply_source": "self_apply",
+            "verify_info": {
+              "method": "verify_message",
+              "verify_message": "健健康康"
+            },
+            "auto_approved": {
+              "strategy_id": "st_7c0b77d442"
+            }
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GROUP_MEMBER_ADD",
+      "category": "群管理",
+      "summary": "群成员加入",
+      "description": "有新成员加入群聊时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_member_add.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "事件时间戳（Unix 秒）"
+        },
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID"
+        },
+        {
+          "name": "member_openid",
+          "type": "string",
+          "description": "新加入成员的 OpenID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "事件时间戳（Unix 秒）"
+          },
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID"
+          },
+          "member_openid": {
+            "type": "string",
+            "description": "新加入成员的 OpenID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "timestamp": 1784276757,
+            "group_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+            "member_openid": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GROUP_MEMBER_REMOVE",
+      "category": "群管理",
+      "summary": "群成员退出",
+      "description": "群成员退出或被移出群聊时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/group_member_remove.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "timestamp",
+          "type": "integer",
+          "description": "事件时间戳（Unix 秒）"
+        },
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID"
+        },
+        {
+          "name": "member_openid",
+          "type": "string",
+          "description": "退出成员的 OpenID"
+        },
+        {
+          "name": "user_openid",
+          "type": "string",
+          "description": "退出成员的用户 OpenID（可能为空）"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "事件时间戳（Unix 秒）"
+          },
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID"
+          },
+          "member_openid": {
+            "type": "string",
+            "description": "退出成员的 OpenID"
+          },
+          "user_openid": {
+            "type": "string",
+            "description": "退出成员的用户 OpenID（可能为空）"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "timestamp": 1784276759,
+            "group_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+            "member_openid": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6",
+            "user_openid": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "INTERACTION_CREATE",
+      "category": "互动",
+      "summary": "互动事件（消息按钮/快捷菜单/清空会话等）",
+      "description": "用户与机器人的互动操作触发此事件，包括消息按钮点击、快捷菜单回调、消息反馈、清空会话、进出故事集、切换模型、用户/群授权等。 收到事件后需调用 PUT /interactions/{interaction_id} 接口回应，否则客户端会一直 loading 直到超时。\n仅 type=11（消息按钮）和 type=12（快捷菜单）需要调用 PUT /interactions/{interaction_id} 回应；其他类型（消息反馈、清空会话、进出故事集、切换模型、授权等）无需回应。同一 interaction_id 只能回应一次，超时后失效。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/interaction_create.html",
+      "intents": [
+        "INTERACTION"
+      ],
+      "intentBits": 67108864,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "事件 ID，用于被动消息发送和互动回调"
+        },
+        {
+          "name": "type",
+          "type": "integer",
+          "description": "互动类型 11 - 消息按钮回调（INLINE_KEYBOARD）：用户点击消息中的内联键盘按钮 12 - 单聊快捷菜单回调（CALLBACK_COMMAND）：用户点击单聊场景下的自定义菜单 13 - 消息反馈（MESSAGE_FEEDBACK）：用户对智能体消息进行点赞/点踩反馈 14 - 清空会话（CLEAR_SESSION）：用户清空智能体会话历史 15 - 进出故事集（IN_OUT_STORY）：用户进入或退出故事集 16 - 切换模型（SWITCH_MODEL）：用户切换智能体模型 18 - 用户授权（USER_AUTHORIZE）：用户授权事件 19 - 群授权（GROUP_AUTHORIZE）：群授权事件 20 - 群授权状态变更（GROUP_AUTHORIZE_STATUS）"
+        },
+        {
+          "name": "scene",
+          "type": "string",
+          "description": "事件发生场景。c2c=单聊, group=群聊, guild=频道"
+        },
+        {
+          "name": "chat_type",
+          "type": "integer",
+          "description": "聊天场景。0=频道, 1=群聊, 2=单聊"
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "description": "触发时间，RFC3339 格式"
+        },
+        {
+          "name": "guild_id",
+          "type": "string",
+          "description": "频道 OpenID（仅频道场景有值）"
+        },
+        {
+          "name": "channel_id",
+          "type": "string",
+          "description": "子频道 OpenID（仅频道场景有值）"
+        },
+        {
+          "name": "user_openid",
+          "type": "string",
+          "description": "用户 OpenID（仅单聊场景有值）"
+        },
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID（仅群聊场景有值）"
+        },
+        {
+          "name": "group_member_openid",
+          "type": "string",
+          "description": "群成员 OpenID（仅群聊场景有值）"
+        },
+        {
+          "name": "data",
+          "type": "InteractionData",
+          "description": "互动数据"
+        },
+        {
+          "name": "version",
+          "type": "integer",
+          "description": "版本号，默认 1"
+        },
+        {
+          "name": "application_id",
+          "type": "string",
+          "description": "机器人 AppID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "事件 ID，用于被动消息发送和互动回调"
+          },
+          "type": {
+            "type": "integer",
+            "description": "互动类型 11 - 消息按钮回调（INLINE_KEYBOARD）：用户点击消息中的内联键盘按钮 12 - 单聊快捷菜单回调（CALLBACK_COMMAND）：用户点击单聊场景下的自定义菜单 13 - 消息反馈（MESSAGE_FEEDBACK）：用户对智能体消息进行点赞/点踩反馈 14 - 清空会话（CLEAR_SESSION）：用户清空智能体会话历史 15 - 进出故事集（IN_OUT_STORY）：用户进入或退出故事集 16 - 切换模型（SWITCH_MODEL）：用户切换智能体模型 18 - 用户授权（USER_AUTHORIZE）：用户授权事件 19 - 群授权（GROUP_AUTHORIZE）：群授权事件 20 - 群授权状态变更（GROUP_AUTHORIZE_STATUS）"
+          },
+          "scene": {
+            "type": "string",
+            "description": "事件发生场景。c2c=单聊, group=群聊, guild=频道"
+          },
+          "chat_type": {
+            "type": "integer",
+            "description": "聊天场景。0=频道, 1=群聊, 2=单聊"
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "触发时间，RFC3339 格式"
+          },
+          "guild_id": {
+            "type": "string",
+            "description": "频道 OpenID（仅频道场景有值）"
+          },
+          "channel_id": {
+            "type": "string",
+            "description": "子频道 OpenID（仅频道场景有值）"
+          },
+          "user_openid": {
+            "type": "string",
+            "description": "用户 OpenID（仅单聊场景有值）"
+          },
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID（仅群聊场景有值）"
+          },
+          "group_member_openid": {
+            "type": "string",
+            "description": "群成员 OpenID（仅群聊场景有值）"
+          },
+          "data": {
+            "type": "object",
+            "title": "InteractionData",
+            "description": "互动数据",
+            "additionalProperties": true
+          },
+          "version": {
+            "type": "integer",
+            "description": "版本号，默认 1"
+          },
+          "application_id": {
+            "type": "string",
+            "description": "机器人 AppID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "application_id": "1904842048",
+            "chat_type": 2,
+            "data": {
+              "resolved": {
+                "button_data": "confirm:once",
+                "button_id": "allow-once"
+              },
+              "type": 11
+            },
+            "id": "1b13d569-4610-4ab9-bc51-feecc5def6d4",
+            "scene": "c2c",
+            "timestamp": "2026-07-20T21:53:54+08:00",
+            "type": 11,
+            "user_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "version": 1
+          }
+        },
+        {
+          "title": "示例2",
+          "body": {
+            "application_id": "101984245",
+            "chat_type": 1,
+            "data": {
+              "resolved": {
+                "button_data": "eyJjb21tYW5kIjogInNhbXBsZSJ9"
+              },
+              "type": 11
+            },
+            "group_member_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "group_openid": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+            "id": "06915133-7aef-46ed-94f7-c50939e285ae",
+            "scene": "group",
+            "timestamp": "2026-07-20T21:53:54+08:00",
+            "type": 11,
+            "version": 1
+          }
+        },
+        {
+          "title": "示例3",
+          "body": {
+            "application_id": "102057050",
+            "data": {
+              "resolved": {
+                "authorize_data": {
+                  "opt_scene": "setting",
+                  "scope": "c2c_push"
+                }
+              }
+            },
+            "id": "c30c003e-9454-4450-8e5e-665267c088c4",
+            "scene": "c2c",
+            "timestamp": "2026-07-20T21:54:38+08:00",
+            "type": 18,
+            "user_openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "version": 1
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "SUBSCRIBE_MESSAGE_STATUS",
+      "category": "订阅消息",
+      "summary": "用户对订阅消息模板的授权状态变更",
+      "description": "用户对订阅消息模板的授权状态发生变化时触发。 可用于判断用户是否允许/拒绝接收某个订阅消息模板。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/subscribe_message_status.html",
+      "intents": [
+        "GROUP_AND_C2C_EVENT"
+      ],
+      "intentBits": 33554432,
+      "payload": [
+        {
+          "name": "group_openid",
+          "type": "string",
+          "description": "群 OpenID（群订阅场景时有值）"
+        },
+        {
+          "name": "openid",
+          "type": "string",
+          "description": "用户 OpenID（个人订阅场景时有值）"
+        },
+        {
+          "name": "result",
+          "type": "[] SubscribeMsgTemplateResult",
+          "description": "各模板的授权结果列表"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "group_openid": {
+            "type": "string",
+            "description": "群 OpenID（群订阅场景时有值）"
+          },
+          "openid": {
+            "type": "string",
+            "description": "用户 OpenID（个人订阅场景时有值）"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "title": "SubscribeMsgTemplateResult",
+              "description": "结构见文档：https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/subscribe_message_status.html",
+              "additionalProperties": true
+            },
+            "description": "各模板的授权结果列表"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "订阅消息授权状态变更",
+          "body": {
+            "openid": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
+            "result": [
+              {
+                "template_id": 10001,
+                "custom_template_id": "tpl_abc123",
+                "op": 1,
+                "subscribe_id": "sub_def456",
+                "subscribe_ts": 1784276820,
+                "update_ts": 1784276820
+              },
+              {
+                "template_id": 10002,
+                "custom_template_id": "tpl_xyz789",
+                "op": 2,
+                "subscribe_id": "sub_ghi012",
+                "subscribe_ts": 1784276815,
+                "update_ts": 1784276820
+              }
+            ]
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GUILD_CREATE",
+      "category": "频道",
+      "summary": "机器人加入新频道（guild）",
+      "description": "机器人被加入到某个频道时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/guild_create.html",
+      "intents": [
+        "GUILDS"
+      ],
+      "intentBits": 1,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "频道 ID"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "频道名称"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "description": "频道头像 URL"
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "description": "频道创建者 ID"
+        },
+        {
+          "name": "member_count",
+          "type": "integer",
+          "description": "频道成员数"
+        },
+        {
+          "name": "max_members",
+          "type": "integer",
+          "description": "频道成员上限"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "频道简介"
+        },
+        {
+          "name": "joined_at",
+          "type": "string",
+          "description": "加入时间，ISO8601 格式"
+        },
+        {
+          "name": "op_user_id",
+          "type": "string",
+          "description": "操作人 ID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "频道 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "频道名称"
+          },
+          "icon": {
+            "type": "string",
+            "description": "频道头像 URL"
+          },
+          "owner_id": {
+            "type": "string",
+            "description": "频道创建者 ID"
+          },
+          "member_count": {
+            "type": "integer",
+            "description": "频道成员数"
+          },
+          "max_members": {
+            "type": "integer",
+            "description": "频道成员上限"
+          },
+          "description": {
+            "type": "string",
+            "description": "频道简介"
+          },
+          "joined_at": {
+            "type": "string",
+            "description": "加入时间，ISO8601 格式"
+          },
+          "op_user_id": {
+            "type": "string",
+            "description": "操作人 ID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "id": "123456789012345678",
+            "name": "技术交流频道",
+            "icon": "https://thirdqq.qlogo.cn/0",
+            "owner_id": "123456789012345678",
+            "member_count": 100,
+            "max_members": 1000,
+            "description": "专注于技术分享与交流的频道",
+            "joined_at": "2026-01-01T00:00:00+08:00",
+            "op_user_id": "123456789012345678"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GUILD_UPDATE",
+      "category": "频道",
+      "summary": "频道资料发生变更",
+      "description": "频道信息变更时触发。事件内容为变更后的数据。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/guild_update.html",
+      "intents": [
+        "GUILDS"
+      ],
+      "intentBits": 1,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "频道 ID"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "频道名称"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "description": "频道头像 URL"
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "description": "频道创建者 ID"
+        },
+        {
+          "name": "member_count",
+          "type": "integer",
+          "description": "频道成员数"
+        },
+        {
+          "name": "max_members",
+          "type": "integer",
+          "description": "频道成员上限"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "频道简介"
+        },
+        {
+          "name": "joined_at",
+          "type": "string",
+          "description": "加入时间，ISO8601 格式"
+        },
+        {
+          "name": "op_user_id",
+          "type": "string",
+          "description": "操作人 ID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "频道 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "频道名称"
+          },
+          "icon": {
+            "type": "string",
+            "description": "频道头像 URL"
+          },
+          "owner_id": {
+            "type": "string",
+            "description": "频道创建者 ID"
+          },
+          "member_count": {
+            "type": "integer",
+            "description": "频道成员数"
+          },
+          "max_members": {
+            "type": "integer",
+            "description": "频道成员上限"
+          },
+          "description": {
+            "type": "string",
+            "description": "频道简介"
+          },
+          "joined_at": {
+            "type": "string",
+            "description": "加入时间，ISO8601 格式"
+          },
+          "op_user_id": {
+            "type": "string",
+            "description": "操作人 ID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "id": "123456789012345678",
+            "name": "更新后的频道",
+            "owner_id": "123456789012345678",
+            "icon": "https://thirdqq.qlogo.cn/0",
+            "member_count": 12,
+            "max_members": 1000,
+            "description": "更新后的描述"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "GUILD_DELETE",
+      "category": "频道",
+      "summary": "机器人退出/频道解散",
+      "description": "频道被解散或机器人被移除时触发。事件内容为变更前的数据。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/guild_delete.html",
+      "intents": [
+        "GUILDS"
+      ],
+      "intentBits": 1,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "频道 ID"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "频道名称"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "description": "频道头像 URL"
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "description": "频道创建者 ID"
+        },
+        {
+          "name": "member_count",
+          "type": "integer",
+          "description": "频道成员数"
+        },
+        {
+          "name": "max_members",
+          "type": "integer",
+          "description": "频道成员上限"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "频道简介"
+        },
+        {
+          "name": "joined_at",
+          "type": "string",
+          "description": "加入时间，ISO8601 格式"
+        },
+        {
+          "name": "op_user_id",
+          "type": "string",
+          "description": "操作人 ID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "频道 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "频道名称"
+          },
+          "icon": {
+            "type": "string",
+            "description": "频道头像 URL"
+          },
+          "owner_id": {
+            "type": "string",
+            "description": "频道创建者 ID"
+          },
+          "member_count": {
+            "type": "integer",
+            "description": "频道成员数"
+          },
+          "max_members": {
+            "type": "integer",
+            "description": "频道成员上限"
+          },
+          "description": {
+            "type": "string",
+            "description": "频道简介"
+          },
+          "joined_at": {
+            "type": "string",
+            "description": "加入时间，ISO8601 格式"
+          },
+          "op_user_id": {
+            "type": "string",
+            "description": "操作人 ID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "id": "123456789012345678",
+            "name": "测试频道",
+            "owner_id": "123456789012345678",
+            "icon": "https://thirdqq.qlogo.cn/0",
+            "member_count": 10,
+            "max_members": 1000,
+            "description": "频道描述"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "CHANNEL_CREATE",
+      "category": "频道",
+      "summary": "子频道被创建",
+      "description": "子频道被创建时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/channel_create.html",
+      "intents": [
+        "GUILDS"
+      ],
+      "intentBits": 1,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "子频道 ID"
+        },
+        {
+          "name": "guild_id",
+          "type": "string",
+          "description": "所属频道 ID"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "子频道名称"
+        },
+        {
+          "name": "type",
+          "type": "integer",
+          "description": "子频道类型。0=文字, 2=语音, 4=分组, 10005=直播, 10006=应用, 10007=论坛"
+        },
+        {
+          "name": "sub_type",
+          "type": "integer",
+          "description": "子频道子类型"
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "description": "创建者 ID"
+        },
+        {
+          "name": "op_user_id",
+          "type": "string",
+          "description": "操作人 ID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "子频道 ID"
+          },
+          "guild_id": {
+            "type": "string",
+            "description": "所属频道 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "子频道名称"
+          },
+          "type": {
+            "type": "integer",
+            "description": "子频道类型。0=文字, 2=语音, 4=分组, 10005=直播, 10006=应用, 10007=论坛"
+          },
+          "sub_type": {
+            "type": "integer",
+            "description": "子频道子类型"
+          },
+          "owner_id": {
+            "type": "string",
+            "description": "创建者 ID"
+          },
+          "op_user_id": {
+            "type": "string",
+            "description": "操作人 ID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "id": "123456",
+            "guild_id": "123456789012345678",
+            "name": "新子频道",
+            "type": 0,
+            "sub_type": 0,
+            "position": 1,
+            "owner_id": "123456789012345678"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "CHANNEL_UPDATE",
+      "category": "频道",
+      "summary": "子频道被更新",
+      "description": "子频道信息变更时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/channel_update.html",
+      "intents": [
+        "GUILDS"
+      ],
+      "intentBits": 1,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "子频道 ID"
+        },
+        {
+          "name": "guild_id",
+          "type": "string",
+          "description": "所属频道 ID"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "子频道名称"
+        },
+        {
+          "name": "type",
+          "type": "integer",
+          "description": "子频道类型。0=文字, 2=语音, 4=分组, 10005=直播, 10006=应用, 10007=论坛"
+        },
+        {
+          "name": "sub_type",
+          "type": "integer",
+          "description": "子频道子类型"
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "description": "创建者 ID"
+        },
+        {
+          "name": "op_user_id",
+          "type": "string",
+          "description": "操作人 ID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "子频道 ID"
+          },
+          "guild_id": {
+            "type": "string",
+            "description": "所属频道 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "子频道名称"
+          },
+          "type": {
+            "type": "integer",
+            "description": "子频道类型。0=文字, 2=语音, 4=分组, 10005=直播, 10006=应用, 10007=论坛"
+          },
+          "sub_type": {
+            "type": "integer",
+            "description": "子频道子类型"
+          },
+          "owner_id": {
+            "type": "string",
+            "description": "创建者 ID"
+          },
+          "op_user_id": {
+            "type": "string",
+            "description": "操作人 ID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "id": "123456",
+            "guild_id": "123456789012345678",
+            "name": "更新后的子频道",
+            "type": 0,
+            "sub_type": 0,
+            "position": 1,
+            "owner_id": "123456789012345678"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "CHANNEL_DELETE",
+      "category": "频道",
+      "summary": "子频道被删除",
+      "description": "子频道被删除时触发。",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/event/channel_delete.html",
+      "intents": [
+        "GUILDS"
+      ],
+      "intentBits": 1,
+      "payload": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "子频道 ID"
+        },
+        {
+          "name": "guild_id",
+          "type": "string",
+          "description": "所属频道 ID"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "子频道名称"
+        },
+        {
+          "name": "type",
+          "type": "integer",
+          "description": "子频道类型。0=文字, 2=语音, 4=分组, 10005=直播, 10006=应用, 10007=论坛"
+        },
+        {
+          "name": "sub_type",
+          "type": "integer",
+          "description": "子频道子类型"
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "description": "创建者 ID"
+        },
+        {
+          "name": "op_user_id",
+          "type": "string",
+          "description": "操作人 ID"
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "子频道 ID"
+          },
+          "guild_id": {
+            "type": "string",
+            "description": "所属频道 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "子频道名称"
+          },
+          "type": {
+            "type": "integer",
+            "description": "子频道类型。0=文字, 2=语音, 4=分组, 10005=直播, 10006=应用, 10007=论坛"
+          },
+          "sub_type": {
+            "type": "integer",
+            "description": "子频道子类型"
+          },
+          "owner_id": {
+            "type": "string",
+            "description": "创建者 ID"
+          },
+          "op_user_id": {
+            "type": "string",
+            "description": "操作人 ID"
+          }
+        },
+        "additionalProperties": true
+      },
+      "examples": [
+        {
+          "title": "示例1",
+          "body": {
+            "id": "123456",
+            "guild_id": "123456789012345678",
+            "name": "被删除的子频道",
+            "type": 0,
+            "sub_type": 0,
+            "position": 1,
+            "owner_id": "123456789012345678"
+          }
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "name": "AT_MESSAGE_CREATE",
+      "category": "频道消息",
+      "summary": "频道内 @机器人 的消息（公域）",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/event.html",
+      "intents": [
+        "PUBLIC_GUILD_MESSAGES"
+      ],
+      "intentBits": 1073741824,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "MESSAGE_CREATE",
+      "category": "频道消息",
+      "summary": "频道内全部消息（仅私域机器人）",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/event.html",
+      "intents": [
+        "GUILD_MESSAGES"
+      ],
+      "intentBits": 512,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "MESSAGE_DELETE",
+      "category": "频道消息",
+      "summary": "频道消息被删除（仅私域机器人）",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/dev-prepare/event-emit/payload.html",
+      "intents": [
+        "GUILD_MESSAGES"
+      ],
+      "intentBits": 512,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "PUBLIC_MESSAGE_DELETE",
+      "category": "频道消息",
+      "summary": "公域频道消息被删除",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/dev-prepare/event-emit/payload.html",
+      "intents": [
+        "PUBLIC_GUILD_MESSAGES"
+      ],
+      "intentBits": 1073741824,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "DIRECT_MESSAGE_CREATE",
+      "category": "频道消息",
+      "summary": "收到用户发给机器人的频道私信",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/event.html",
+      "intents": [
+        "DIRECT_MESSAGE"
+      ],
+      "intentBits": 4096,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "DIRECT_MESSAGE_DELETE",
+      "category": "频道消息",
+      "summary": "频道私信被删除",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/dev-prepare/event-emit/payload.html",
+      "intents": [
+        "DIRECT_MESSAGE"
+      ],
+      "intentBits": 4096,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "MESSAGE_REACTION_ADD",
+      "category": "表情表态",
+      "summary": "为频道消息添加表情表态",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/dev-prepare/event-emit/payload.html",
+      "intents": [
+        "GUILD_MESSAGE_REACTIONS"
+      ],
+      "intentBits": 1024,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "MESSAGE_REACTION_REMOVE",
+      "category": "表情表态",
+      "summary": "为频道消息删除表情表态",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/dev-prepare/event-emit/payload.html",
+      "intents": [
+        "GUILD_MESSAGE_REACTIONS"
+      ],
+      "intentBits": 1024,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "GUILD_MEMBER_ADD",
+      "category": "频道成员",
+      "summary": "频道成员加入",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/guild_member.html",
+      "intents": [
+        "GUILD_MEMBERS"
+      ],
+      "intentBits": 2,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "GUILD_MEMBER_UPDATE",
+      "category": "频道成员",
+      "summary": "频道成员资料变更",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/guild_member.html",
+      "intents": [
+        "GUILD_MEMBERS"
+      ],
+      "intentBits": 2,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "GUILD_MEMBER_REMOVE",
+      "category": "频道成员",
+      "summary": "频道成员被移除",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/guild_member.html",
+      "intents": [
+        "GUILD_MEMBERS"
+      ],
+      "intentBits": 2,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "MESSAGE_AUDIT_PASS",
+      "category": "消息审核",
+      "summary": "频道消息审核通过",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/event.html",
+      "intents": [
+        "MESSAGE_AUDIT"
+      ],
+      "intentBits": 134217728,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "MESSAGE_AUDIT_REJECT",
+      "category": "消息审核",
+      "summary": "频道消息审核不通过",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/event.html",
+      "intents": [
+        "MESSAGE_AUDIT"
+      ],
+      "intentBits": 134217728,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "FORUM_THREAD_CREATE",
+      "category": "论坛",
+      "summary": "用户创建论坛主题",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "FORUM_THREAD_UPDATE",
+      "category": "论坛",
+      "summary": "用户更新论坛主题",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "FORUM_THREAD_DELETE",
+      "category": "论坛",
+      "summary": "用户删除论坛主题",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "FORUM_POST_CREATE",
+      "category": "论坛",
+      "summary": "用户创建论坛帖子",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "FORUM_POST_DELETE",
+      "category": "论坛",
+      "summary": "用户删除论坛帖子",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "FORUM_REPLY_CREATE",
+      "category": "论坛",
+      "summary": "用户回复论坛评论",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "FORUM_REPLY_DELETE",
+      "category": "论坛",
+      "summary": "用户删除论坛评论",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "FORUM_PUBLISH_AUDIT_RESULT",
+      "category": "论坛",
+      "summary": "论坛内容发表审核结果",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "OPEN_FORUM_THREAD_CREATE",
+      "category": "论坛",
+      "summary": "开放论坛主题创建",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/open_forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "OPEN_FORUM_THREAD_UPDATE",
+      "category": "论坛",
+      "summary": "开放论坛主题更新",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/open_forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "OPEN_FORUM_THREAD_DELETE",
+      "category": "论坛",
+      "summary": "开放论坛主题删除",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/open_forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "OPEN_FORUM_POST_CREATE",
+      "category": "论坛",
+      "summary": "开放论坛帖子创建",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/open_forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "OPEN_FORUM_POST_DELETE",
+      "category": "论坛",
+      "summary": "开放论坛帖子删除",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/open_forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "OPEN_FORUM_REPLY_CREATE",
+      "category": "论坛",
+      "summary": "开放论坛评论创建",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/open_forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "OPEN_FORUM_REPLY_DELETE",
+      "category": "论坛",
+      "summary": "开放论坛评论删除",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/open_forum.html",
+      "intents": [
+        "FORUMS_EVENT"
+      ],
+      "intentBits": 268435456,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "AUDIO_OR_LIVE_CHANNEL_MEMBER_ENTER",
+      "category": "音频",
+      "summary": "成员进入音视频/直播子频道",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/audio_or_live_channel_member.html",
+      "intents": [
+        "AUDIO_ACTION"
+      ],
+      "intentBits": 536870912,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "AUDIO_OR_LIVE_CHANNEL_MEMBER_EXIT",
+      "category": "音频",
+      "summary": "成员离开音视频/直播子频道",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/audio_or_live_channel_member.html",
+      "intents": [
+        "AUDIO_ACTION"
+      ],
+      "intentBits": 536870912,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    },
+    {
+      "name": "READY",
+      "category": "系统",
+      "summary": "网关鉴权成功，返回 session_id 与机器人信息",
+      "description": "",
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/dev-prepare/event-emit/websocket.html",
+      "intents": [],
+      "intentBits": 0,
+      "payload": [],
+      "payloadSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": true
+      },
+      "examples": [],
+      "warnings": []
+    }
+  ]
+}

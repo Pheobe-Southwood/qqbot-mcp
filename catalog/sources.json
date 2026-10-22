@@ -1,0 +1,1297 @@
+{
+  "note": "Curated metadata for every QQ official bot OpenAPI endpoint. Parameter tables/response/errors are extracted from docUrl by scripts/sync-catalog.mjs; handwritten schema refinements live in catalog/overrides.json. readOnly is declared here (never inferred at runtime).",
+  "upstream": "https://bot.q.qq.com/wiki/develop/api-v2/",
+  "apis": [
+    {
+      "name": "get_bot_info",
+      "aliases": [
+        "get_me",
+        "me"
+      ],
+      "category": "机器人",
+      "summary": "获取当前机器人（AppID 对应）的详情",
+      "method": "GET",
+      "path": "/users/@me",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/users_me.get.html"
+    },
+    {
+      "name": "list_bot_guilds",
+      "aliases": [
+        "get_me_guilds",
+        "list_my_guilds"
+      ],
+      "category": "机器人",
+      "summary": "获取机器人已加入的频道（guild）列表",
+      "method": "GET",
+      "path": "/users/@me/guilds",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/users_me_guilds.get.html"
+    },
+    {
+      "name": "generate_share_link",
+      "aliases": [
+        "generate_url_link",
+        "create_share_link"
+      ],
+      "category": "机器人",
+      "summary": "生成机器人分享链接（可带 callback_data，邀请用户添加机器人）",
+      "method": "POST",
+      "path": "/v2/generate_url_link",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_generate_url_link.post.html"
+    },
+    {
+      "name": "get_gateway",
+      "aliases": [
+        "get_wss_url",
+        "gateway"
+      ],
+      "category": "网关",
+      "summary": "获取通用 WSS 接入点",
+      "method": "GET",
+      "path": "/gateway",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/gateway.get.html"
+    },
+    {
+      "name": "get_gateway_bot",
+      "aliases": [
+        "get_shard_url",
+        "gateway_bot"
+      ],
+      "category": "网关",
+      "summary": "获取带分片的 WSS 接入点、建议分片数与 Session 配额",
+      "method": "GET",
+      "path": "/gateway/bot",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/openapi/wss/shard_url_get.html"
+    },
+    {
+      "name": "send_c2c_message",
+      "aliases": [
+        "post_c2c_message",
+        "send_private_message"
+      ],
+      "category": "单聊消息",
+      "summary": "发送单聊消息（文本/Markdown/输入中/富媒体/键盘/引用）",
+      "method": "POST",
+      "path": "/v2/users/{user_openid}/messages",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_users_user_openid_messages.post.html"
+    },
+    {
+      "name": "stream_c2c_message",
+      "aliases": [
+        "post_c2c_stream_message"
+      ],
+      "category": "单聊消息",
+      "summary": "流式分批发送单聊消息（同 stream_msg_id 多分片）",
+      "method": "POST",
+      "path": "/v2/users/{user_openid}/stream_messages",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_users_user_openid_stream_messages.post.html"
+    },
+    {
+      "name": "recall_c2c_message",
+      "aliases": [
+        "delete_c2c_message"
+      ],
+      "category": "单聊消息",
+      "summary": "撤回机器人自己发送的单聊消息",
+      "method": "DELETE",
+      "path": "/v2/users/{user_openid}/messages/{message_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_users_user_openid_messages_message_id.delete.html"
+    },
+    {
+      "name": "upload_c2c_file",
+      "aliases": [
+        "post_c2c_file",
+        "upload_c2c_media"
+      ],
+      "category": "单聊消息",
+      "summary": "单聊富媒体上传（URL/二进制/分片合并），返回 file_info",
+      "method": "POST",
+      "path": "/v2/users/{user_openid}/files",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_users_user_openid_files.post.html"
+    },
+    {
+      "name": "prepare_c2c_upload",
+      "aliases": [
+        "c2c_upload_prepare"
+      ],
+      "category": "单聊消息",
+      "summary": "单聊富媒体分片上传：申请 upload_id 与各分片预签名 URL",
+      "method": "POST",
+      "path": "/v2/users/{user_id}/upload_prepare",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_users_user_id_upload_prepare.post.html"
+    },
+    {
+      "name": "finish_c2c_upload_part",
+      "aliases": [
+        "c2c_upload_part_finish"
+      ],
+      "category": "单聊消息",
+      "summary": "单聊富媒体分片上传：通知某个分片已完成",
+      "method": "POST",
+      "path": "/v2/users/{user_id}/upload_part_finish",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_users_user_id_upload_part_finish.post.html"
+    },
+    {
+      "name": "send_group_message",
+      "aliases": [
+        "post_group_message",
+        "send_group_msg"
+      ],
+      "category": "群聊消息",
+      "summary": "发送群聊消息（文本/Markdown/富媒体/键盘/引用），支持被动回复",
+      "method": "POST",
+      "path": "/v2/groups/{group_openid}/messages",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_messages.post.html"
+    },
+    {
+      "name": "recall_group_message",
+      "aliases": [
+        "delete_group_message"
+      ],
+      "category": "群聊消息",
+      "summary": "撤回机器人在群内发送的消息（2 分钟内）",
+      "method": "DELETE",
+      "path": "/v2/groups/{group_openid}/messages/{message_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_messages_message_id.delete.html"
+    },
+    {
+      "name": "upload_group_file",
+      "aliases": [
+        "post_group_file",
+        "upload_group_media"
+      ],
+      "category": "群聊消息",
+      "summary": "群聊富媒体上传（URL/二进制/分片合并），返回 file_info",
+      "method": "POST",
+      "path": "/v2/groups/{group_openid}/files",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_files.post.html"
+    },
+    {
+      "name": "prepare_group_upload",
+      "aliases": [
+        "group_upload_prepare"
+      ],
+      "category": "群聊消息",
+      "summary": "群聊富媒体分片上传：申请 upload_id 与各分片预签名 URL",
+      "method": "POST",
+      "path": "/v2/groups/{group_id}/upload_prepare",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_id_upload_prepare.post.html"
+    },
+    {
+      "name": "finish_group_upload_part",
+      "aliases": [
+        "group_upload_part_finish"
+      ],
+      "category": "群聊消息",
+      "summary": "群聊富媒体分片上传：通知某个分片已完成",
+      "method": "POST",
+      "path": "/v2/groups/{group_id}/upload_part_finish",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_id_upload_part_finish.post.html"
+    },
+    {
+      "name": "get_group_info",
+      "aliases": [
+        "get_group_info_v2",
+        "group_info"
+      ],
+      "category": "群管理",
+      "summary": "获取群基本信息（名称/简介/分类/标签/人数）",
+      "method": "GET",
+      "path": "/v2/groups/{group_openid}/info",
+      "readOnly": true,
+      "permissionRequired": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_info.get.html"
+    },
+    {
+      "name": "get_group_bot_state",
+      "aliases": [
+        "group_bot_state"
+      ],
+      "category": "群管理",
+      "summary": "获取机器人在群内的状态（角色/入群时间/主动消息开关/接收设置）",
+      "method": "GET",
+      "path": "/v2/groups/{group_openid}/bot_state",
+      "readOnly": true,
+      "permissionRequired": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_bot_state.get.html"
+    },
+    {
+      "name": "list_group_members",
+      "aliases": [
+        "get_group_members"
+      ],
+      "category": "群管理",
+      "summary": "分页获取群成员列表（每页最多 30 条）",
+      "method": "GET",
+      "path": "/v2/groups/{group_openid}/members",
+      "readOnly": true,
+      "permissionRequired": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_members.get.html"
+    },
+    {
+      "name": "get_group_member",
+      "aliases": [
+        "get_group_member_info"
+      ],
+      "category": "群管理",
+      "summary": "获取单个群成员信息",
+      "method": "GET",
+      "path": "/v2/groups/{group_openid}/members/{member_openid}",
+      "readOnly": true,
+      "permissionRequired": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_members_member_openid.get.html"
+    },
+    {
+      "name": "batch_remove_group_members",
+      "aliases": [
+        "remove_group_members"
+      ],
+      "category": "群管理",
+      "summary": "批量移除群成员（单次最多 20），可同时拉黑",
+      "method": "POST",
+      "path": "/v2/groups/{group_openid}/batch_remove_members",
+      "readOnly": false,
+      "permissionRequired": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_batch_remove_members.post.html"
+    },
+    {
+      "name": "list_group_join_requests",
+      "aliases": [
+        "get_join_request_list"
+      ],
+      "category": "群管理",
+      "summary": "分页拉取入群申请列表",
+      "method": "GET",
+      "path": "/v2/groups/{group_openid}/join_request_list",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_join_request_list.get.html"
+    },
+    {
+      "name": "approve_group_join_request",
+      "aliases": [
+        "approval_join_request"
+      ],
+      "category": "群管理",
+      "summary": "审批入群申请（approve/decline，可拒绝并拉黑）",
+      "method": "POST",
+      "path": "/v2/groups/{group_openid}/approval_join_request/{member_openid}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_approval_join_request_member_openid.post.html"
+    },
+    {
+      "name": "list_join_approval_strategies",
+      "aliases": [
+        "get_join_approval_strategies"
+      ],
+      "category": "群管理",
+      "summary": "查询入群自动审批策略列表",
+      "method": "GET",
+      "path": "/v2/groups/join_approval_strategy",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_join_approval_strategy.get.html"
+    },
+    {
+      "name": "create_join_approval_strategy",
+      "aliases": [
+        "post_join_approval_strategy"
+      ],
+      "category": "群管理",
+      "summary": "创建入群自动审批策略（群 openid 或群号二选一，最多 100 个群）",
+      "method": "POST",
+      "path": "/v2/groups/join_approval_strategy",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_join_approval_strategy.post.html"
+    },
+    {
+      "name": "update_join_approval_strategy",
+      "aliases": [
+        "patch_join_approval_strategy"
+      ],
+      "category": "群管理",
+      "summary": "修改入群自动审批策略（启停/过期时间/关联群增删/备注）",
+      "method": "PATCH",
+      "path": "/v2/groups/join_approval_strategy/{strategy_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_join_approval_strategy_strategy_id.patch.html"
+    },
+    {
+      "name": "delete_join_approval_strategy",
+      "aliases": [
+        "delete_join_strategy"
+      ],
+      "category": "群管理",
+      "summary": "删除入群自动审批策略",
+      "method": "DELETE",
+      "path": "/v2/groups/join_approval_strategy/{strategy_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_join_approval_strategy_strategy_id.delete.html"
+    },
+    {
+      "name": "execute_join_approval_strategy",
+      "aliases": [
+        "run_join_approval_strategy"
+      ],
+      "category": "群管理",
+      "summary": "立即执行一次入群自动审批策略",
+      "method": "POST",
+      "path": "/v2/groups/join_approval_strategy/{strategy_id}/execute",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_join_approval_strategy_strategy_id_execute.post.html"
+    },
+    {
+      "name": "update_join_approval_whitelist",
+      "aliases": [
+        "join_approval_whitelist_users"
+      ],
+      "category": "群管理",
+      "summary": "修改入群自动审批策略的白名单号码（单次最多 10000）",
+      "method": "POST",
+      "path": "/v2/groups/join_approval_strategy/{strategy_id}/whitelist_users",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_join_approval_strategy_strategy_id_whitelist_users.post.html"
+    },
+    {
+      "name": "list_group_blacklist",
+      "aliases": [
+        "get_group_member_blacklist"
+      ],
+      "category": "群管理",
+      "summary": "分页查询群黑名单",
+      "method": "GET",
+      "path": "/v2/groups/{group_openid}/member_blacklist",
+      "readOnly": true,
+      "permissionRequired": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_member_blacklist.get.html"
+    },
+    {
+      "name": "update_group_blacklist",
+      "aliases": [
+        "post_group_member_blacklist"
+      ],
+      "category": "群管理",
+      "summary": "群黑名单操作（add 拉黑 / del 移出，单次最多 20）",
+      "method": "POST",
+      "path": "/v2/groups/{group_openid}/member_blacklist",
+      "readOnly": false,
+      "permissionRequired": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_member_blacklist.post.html"
+    },
+    {
+      "name": "get_group_mute_setting",
+      "aliases": [
+        "get_restrict_chat_setting"
+      ],
+      "category": "群管理",
+      "summary": "查询群禁言状态（群级规则 + 当前被禁言成员）",
+      "method": "GET",
+      "path": "/v2/groups/{group_openid}/restrict_chat_setting",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_restrict_chat_setting.get.html"
+    },
+    {
+      "name": "set_group_member_mute",
+      "aliases": [
+        "post_restrict_chat_setting",
+        "mute_group_member"
+      ],
+      "category": "群管理",
+      "summary": "设置群成员禁言（add/update/del，单次最多 20）",
+      "method": "POST",
+      "path": "/v2/groups/{group_openid}/restrict_chat_setting",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_groups_group_openid_restrict_chat_setting.post.html"
+    },
+    {
+      "name": "send_channel_message",
+      "aliases": [
+        "post_channel_message",
+        "post_messages",
+        "send_guild_message"
+      ],
+      "category": "频道消息",
+      "summary": "向子频道发送消息（文本/embed/ark/markdown/图片/引用）",
+      "method": "POST",
+      "path": "/channels/{channel_id}/messages",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/send.html"
+    },
+    {
+      "name": "recall_channel_message",
+      "aliases": [
+        "delete_channel_message",
+        "recall_message"
+      ],
+      "category": "频道消息",
+      "summary": "撤回子频道消息（可选 hidetip 隐藏小灰条）",
+      "method": "DELETE",
+      "path": "/channels/{channel_id}/messages/{message_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/recall.html"
+    },
+    {
+      "name": "create_dm_session",
+      "aliases": [
+        "post_dms",
+        "create_dms"
+      ],
+      "category": "频道消息",
+      "summary": "与同一频道内的成员创建私信会话",
+      "method": "POST",
+      "path": "/users/@me/dms",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/dms.html",
+      "sectionHeading": "创建私信会话"
+    },
+    {
+      "name": "send_dm_message",
+      "aliases": [
+        "post_dms_message"
+      ],
+      "category": "频道消息",
+      "summary": "发送频道私信消息（参数与子频道消息一致）",
+      "method": "POST",
+      "path": "/dms/{guild_id}/messages",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/dms.html",
+      "sectionHeading": "发送私信"
+    },
+    {
+      "name": "recall_dm_message",
+      "aliases": [
+        "delete_dm_message"
+      ],
+      "category": "频道消息",
+      "summary": "撤回机器人发送的频道私信",
+      "method": "DELETE",
+      "path": "/dms/{guild_id}/messages/{message_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/message/dms.html",
+      "sectionHeading": "撤回私信"
+    },
+    {
+      "name": "get_channel_message",
+      "aliases": [
+        "get_message_of_id"
+      ],
+      "category": "频道消息",
+      "summary": "获取子频道单条消息详情（旧版接口，当前 v2 索引未列出）",
+      "method": "GET",
+      "path": "/channels/{channel_id}/messages/{message_id}",
+      "readOnly": true,
+      "legacy": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/nodesdk/message/get_message_of_id.html"
+    },
+    {
+      "name": "patch_channel_message",
+      "aliases": [
+        "update_channel_message",
+        "patch_guild_message"
+      ],
+      "category": "频道消息",
+      "summary": "修改机器人自己发送的频道消息（更新 keyboard，旧版接口）",
+      "method": "PATCH",
+      "path": "/channels/{channel_id}/messages/{message_id}",
+      "readOnly": false,
+      "legacy": true,
+      "docUrl": "https://github.com/tencent-connect/botpy/blob/master/botpy/api.py"
+    },
+    {
+      "name": "get_guild",
+      "aliases": [
+        "get_guild_detail",
+        "get_channel_guild"
+      ],
+      "category": "频道管理",
+      "summary": "获取频道（guild）详情",
+      "method": "GET",
+      "path": "/guilds/{guild_id}",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/guilds_guild_id.get.html"
+    },
+    {
+      "name": "list_guild_channels",
+      "aliases": [
+        "get_channels"
+      ],
+      "category": "频道管理",
+      "summary": "获取频道下的子频道列表",
+      "method": "GET",
+      "path": "/guilds/{guild_id}/channels",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/guilds_guild_id_channels.get.html"
+    },
+    {
+      "name": "create_guild_channel",
+      "aliases": [
+        "post_channels",
+        "create_channel"
+      ],
+      "category": "频道管理",
+      "summary": "在频道下创建子频道",
+      "method": "POST",
+      "path": "/guilds/{guild_id}/channels",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/guilds_guild_id_channels.post.html"
+    },
+    {
+      "name": "get_channel",
+      "aliases": [
+        "get_channel_detail"
+      ],
+      "category": "频道管理",
+      "summary": "获取子频道详情",
+      "method": "GET",
+      "path": "/channels/{channel_id}",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/channels_channel_id.get.html"
+    },
+    {
+      "name": "update_channel",
+      "aliases": [
+        "patch_channel"
+      ],
+      "category": "频道管理",
+      "summary": "修改子频道（名称/类型/位置/父子频道/私密设置）",
+      "method": "PATCH",
+      "path": "/channels/{channel_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/channels_channel_id.patch.html"
+    },
+    {
+      "name": "delete_channel",
+      "aliases": [
+        "remove_channel"
+      ],
+      "category": "频道管理",
+      "summary": "删除子频道",
+      "method": "DELETE",
+      "path": "/channels/{channel_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/channels_channel_id.delete.html"
+    },
+    {
+      "name": "list_guild_members",
+      "aliases": [
+        "get_members"
+      ],
+      "category": "频道管理",
+      "summary": "分页获取频道成员列表（after/limit）",
+      "method": "GET",
+      "path": "/guilds/{guild_id}/members",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/member/get_members.html"
+    },
+    {
+      "name": "get_guild_member",
+      "aliases": [
+        "get_member"
+      ],
+      "category": "频道管理",
+      "summary": "获取频道成员详情",
+      "method": "GET",
+      "path": "/guilds/{guild_id}/members/{user_id}",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/member/get_member.html"
+    },
+    {
+      "name": "remove_guild_member",
+      "aliases": [
+        "delete_member",
+        "kick_guild_member"
+      ],
+      "category": "频道管理",
+      "summary": "移除频道成员（可加黑名单并保留期限）",
+      "method": "DELETE",
+      "path": "/guilds/{guild_id}/members/{user_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/member/delete_member.html"
+    },
+    {
+      "name": "list_role_members",
+      "aliases": [
+        "get_role_members"
+      ],
+      "category": "频道管理",
+      "summary": "分页获取频道身份组成员列表",
+      "method": "GET",
+      "path": "/guilds/{guild_id}/roles/{role_id}/members",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/member/get_role_members.html"
+    },
+    {
+      "name": "get_channel_online_nums",
+      "aliases": [
+        "get_online_nums"
+      ],
+      "category": "频道管理",
+      "summary": "获取子频道在线成员数",
+      "method": "GET",
+      "path": "/channels/{channel_id}/online_nums",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role/get_online_nums.html"
+    },
+    {
+      "name": "list_voice_members",
+      "aliases": [
+        "get_voice_members"
+      ],
+      "category": "频道管理",
+      "summary": "获取语音子频道当前在麦成员（旧版接口）",
+      "method": "GET",
+      "path": "/channels/{channel_id}/voice/members",
+      "readOnly": true,
+      "legacy": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/nodesdk/member/get_voice_members.html"
+    },
+    {
+      "name": "get_guild_message_setting",
+      "aliases": [
+        "get_message_setting"
+      ],
+      "category": "频道管理",
+      "summary": "获取频道消息频率设置详情",
+      "method": "GET",
+      "path": "/guilds/{guild_id}/message/setting",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/speak/setting/message_setting.html"
+    },
+    {
+      "name": "list_guild_roles",
+      "aliases": [
+        "get_guild_roles"
+      ],
+      "category": "身份组",
+      "summary": "获取频道身份组列表",
+      "method": "GET",
+      "path": "/guilds/{guild_id}/roles",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/get_guild_roles.html"
+    },
+    {
+      "name": "create_guild_role",
+      "aliases": [
+        "post_guild_role"
+      ],
+      "category": "身份组",
+      "summary": "创建频道身份组",
+      "method": "POST",
+      "path": "/guilds/{guild_id}/roles",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/post_guild_role.html"
+    },
+    {
+      "name": "update_guild_role",
+      "aliases": [
+        "patch_guild_role"
+      ],
+      "category": "身份组",
+      "summary": "修改频道身份组",
+      "method": "PATCH",
+      "path": "/guilds/{guild_id}/roles/{role_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/patch_guild_role.html"
+    },
+    {
+      "name": "delete_guild_role",
+      "aliases": [
+        "remove_guild_role"
+      ],
+      "category": "身份组",
+      "summary": "删除频道身份组",
+      "method": "DELETE",
+      "path": "/guilds/{guild_id}/roles/{role_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/delete_guild_role.html"
+    },
+    {
+      "name": "add_guild_member_role",
+      "aliases": [
+        "put_guild_member_role",
+        "create_guild_role_member"
+      ],
+      "category": "身份组",
+      "summary": "为频道成员添加身份组",
+      "method": "PUT",
+      "path": "/guilds/{guild_id}/members/{user_id}/roles/{role_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/put_guild_member_role.html"
+    },
+    {
+      "name": "remove_guild_member_role",
+      "aliases": [
+        "delete_guild_member_role"
+      ],
+      "category": "身份组",
+      "summary": "移除频道成员的身份组",
+      "method": "DELETE",
+      "path": "/guilds/{guild_id}/members/{user_id}/roles/{role_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/delete_guild_member_role.html"
+    },
+    {
+      "name": "get_channel_user_permissions",
+      "aliases": [
+        "get_channel_permissions"
+      ],
+      "category": "子频道权限",
+      "summary": "获取子频道用户权限",
+      "method": "GET",
+      "path": "/channels/{channel_id}/members/{user_id}/permissions",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/channel_permissions/get_channel_permissions.html"
+    },
+    {
+      "name": "update_channel_user_permissions",
+      "aliases": [
+        "put_channel_permissions"
+      ],
+      "category": "子频道权限",
+      "summary": "修改子频道用户权限",
+      "method": "PUT",
+      "path": "/channels/{channel_id}/members/{user_id}/permissions",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/channel_permissions/put_channel_permissions.html"
+    },
+    {
+      "name": "get_channel_role_permissions",
+      "aliases": [
+        "get_channel_roles_permissions"
+      ],
+      "category": "子频道权限",
+      "summary": "获取子频道身份组权限",
+      "method": "GET",
+      "path": "/channels/{channel_id}/roles/{role_id}/permissions",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/channel_permissions/get_channel_roles_permissions.html"
+    },
+    {
+      "name": "update_channel_role_permissions",
+      "aliases": [
+        "put_channel_roles_permissions"
+      ],
+      "category": "子频道权限",
+      "summary": "修改子频道身份组权限",
+      "method": "PUT",
+      "path": "/channels/{channel_id}/roles/{role_id}/permissions",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/role-group/channel_permissions/put_channel_roles_permissions.html"
+    },
+    {
+      "name": "get_guild_api_permissions",
+      "aliases": [
+        "get_api_permissions"
+      ],
+      "category": "接口权限",
+      "summary": "获取机器人在频道内可用的 API 权限列表",
+      "method": "GET",
+      "path": "/guilds/{guild_id}/api_permission",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/api_permissions/get_guild_api_permission.html"
+    },
+    {
+      "name": "request_guild_api_permission",
+      "aliases": [
+        "post_api_permission_demand"
+      ],
+      "category": "接口权限",
+      "summary": "发送机器人在频道内接口权限的授权链接",
+      "method": "POST",
+      "path": "/guilds/{guild_id}/api_permission/demand",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/api_permissions/post_api_permission_demand.html"
+    },
+    {
+      "name": "mute_guild",
+      "aliases": [
+        "mute_all",
+        "patch_guild_mute"
+      ],
+      "category": "禁言",
+      "summary": "频道全员禁言（mute_seconds/mute_end_timestamp，0 解除）",
+      "method": "PATCH",
+      "path": "/guilds/{guild_id}/mute",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/speak/patch_guild_mute.html"
+    },
+    {
+      "name": "mute_guild_member",
+      "aliases": [
+        "mute_member",
+        "patch_guild_member_mute"
+      ],
+      "category": "禁言",
+      "summary": "频道指定成员禁言/解除禁言",
+      "method": "PATCH",
+      "path": "/guilds/{guild_id}/members/{user_id}/mute",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/speak/patch_guild_member_mute.html"
+    },
+    {
+      "name": "mute_guild_members",
+      "aliases": [
+        "mute_multi_member",
+        "patch_guild_mute_multi_member"
+      ],
+      "category": "禁言",
+      "summary": "频道批量成员禁言/取消禁言",
+      "method": "PATCH",
+      "path": "/guilds/{guild_id}/mute",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/speak/patch_guild_mute_multi_member.html"
+    },
+    {
+      "name": "create_guild_announce",
+      "aliases": [
+        "post_guild_announce",
+        "create_announce"
+      ],
+      "category": "公告",
+      "summary": "创建频道公告（消息公告/推荐子频道）",
+      "method": "POST",
+      "path": "/guilds/{guild_id}/announces",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/announces/post_guild_announces.html"
+    },
+    {
+      "name": "delete_guild_announce",
+      "aliases": [
+        "delete_announce"
+      ],
+      "category": "公告",
+      "summary": "删除频道公告（message_id 传 all 删除全部）",
+      "method": "DELETE",
+      "path": "/guilds/{guild_id}/announces/{message_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/announces/delete_guild_announces.html"
+    },
+    {
+      "name": "create_channel_announce",
+      "aliases": [
+        "post_channel_announce"
+      ],
+      "category": "公告",
+      "summary": "创建子频道公告（2022-03-15 后已废弃）",
+      "method": "POST",
+      "path": "/channels/{channel_id}/announces",
+      "readOnly": false,
+      "deprecated": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/announces/post_channel_announces.html"
+    },
+    {
+      "name": "delete_channel_announce",
+      "aliases": [
+        "delete_channel_announces"
+      ],
+      "category": "公告",
+      "summary": "删除子频道公告（2022-03-15 后已废弃）",
+      "method": "DELETE",
+      "path": "/channels/{channel_id}/announces/{message_id}",
+      "readOnly": false,
+      "deprecated": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/announces/delete_channel_announces.html"
+    },
+    {
+      "name": "control_channel_audio",
+      "aliases": [
+        "post_audio",
+        "audio_control"
+      ],
+      "category": "音频",
+      "summary": "控制子频道音频播放（开始/暂停/继续/停止）",
+      "method": "POST",
+      "path": "/channels/{channel_id}/audio",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/audio/audio_control.html"
+    },
+    {
+      "name": "join_channel_mic",
+      "aliases": [
+        "put_mic",
+        "on_microphone"
+      ],
+      "category": "音频",
+      "summary": "机器人上麦",
+      "method": "PUT",
+      "path": "/channels/{channel_id}/mic",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/audio/put_mic.html"
+    },
+    {
+      "name": "leave_channel_mic",
+      "aliases": [
+        "delete_mic",
+        "off_microphone"
+      ],
+      "category": "音频",
+      "summary": "机器人下麦",
+      "method": "DELETE",
+      "path": "/channels/{channel_id}/mic",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/audio/delete_mic.html"
+    },
+    {
+      "name": "list_forum_threads",
+      "aliases": [
+        "get_threads"
+      ],
+      "category": "论坛",
+      "summary": "获取论坛子频道帖子列表",
+      "method": "GET",
+      "path": "/channels/{channel_id}/threads",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/get_threads_list.html"
+    },
+    {
+      "name": "get_forum_thread",
+      "aliases": [
+        "get_thread"
+      ],
+      "category": "论坛",
+      "summary": "获取论坛帖子详情",
+      "method": "GET",
+      "path": "/channels/{channel_id}/threads/{thread_id}",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/get_thread.html"
+    },
+    {
+      "name": "create_forum_thread",
+      "aliases": [
+        "put_thread",
+        "post_thread"
+      ],
+      "category": "论坛",
+      "summary": "在论坛子频道发表帖子",
+      "method": "PUT",
+      "path": "/channels/{channel_id}/threads",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/put_thread.html"
+    },
+    {
+      "name": "delete_forum_thread",
+      "aliases": [
+        "remove_thread"
+      ],
+      "category": "论坛",
+      "summary": "删除论坛帖子",
+      "method": "DELETE",
+      "path": "/channels/{channel_id}/threads/{thread_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/forum/delete_thread.html"
+    },
+    {
+      "name": "list_pins",
+      "aliases": [
+        "get_pins",
+        "get_pins_message"
+      ],
+      "category": "精华消息",
+      "summary": "获取子频道精华消息列表",
+      "method": "GET",
+      "path": "/channels/{channel_id}/pins",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/pins/get_pins_message.html"
+    },
+    {
+      "name": "add_pin",
+      "aliases": [
+        "put_pin",
+        "put_pins_message"
+      ],
+      "category": "精华消息",
+      "summary": "添加子频道精华消息",
+      "method": "PUT",
+      "path": "/channels/{channel_id}/pins/{message_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/pins/put_pins_message.html"
+    },
+    {
+      "name": "delete_pin",
+      "aliases": [
+        "delete_pins_message"
+      ],
+      "category": "精华消息",
+      "summary": "删除子频道精华消息",
+      "method": "DELETE",
+      "path": "/channels/{channel_id}/pins/{message_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/pins/delete_pins_message.html"
+    },
+    {
+      "name": "list_schedules",
+      "aliases": [
+        "get_schedules"
+      ],
+      "category": "日程",
+      "summary": "获取子频道日程列表（since 增量）",
+      "method": "GET",
+      "path": "/channels/{channel_id}/schedules",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/schedule/get_schedules.html"
+    },
+    {
+      "name": "get_schedule",
+      "aliases": [
+        "get_schedule_detail"
+      ],
+      "category": "日程",
+      "summary": "获取日程详情",
+      "method": "GET",
+      "path": "/channels/{channel_id}/schedules/{schedule_id}",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/schedule/get_schedule.html"
+    },
+    {
+      "name": "create_schedule",
+      "aliases": [
+        "post_schedule"
+      ],
+      "category": "日程",
+      "summary": "创建子频道日程",
+      "method": "POST",
+      "path": "/channels/{channel_id}/schedules",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/schedule/post_schedule.html"
+    },
+    {
+      "name": "update_schedule",
+      "aliases": [
+        "patch_schedule"
+      ],
+      "category": "日程",
+      "summary": "修改子频道日程",
+      "method": "PATCH",
+      "path": "/channels/{channel_id}/schedules/{schedule_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/schedule/patch_schedule.html"
+    },
+    {
+      "name": "delete_schedule",
+      "aliases": [
+        "remove_schedule"
+      ],
+      "category": "日程",
+      "summary": "删除子频道日程",
+      "method": "DELETE",
+      "path": "/channels/{channel_id}/schedules/{schedule_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/channel/content/schedule/delete_schedule.html"
+    },
+    {
+      "name": "add_reaction",
+      "aliases": [
+        "put_reaction",
+        "post_reaction"
+      ],
+      "category": "表情表态",
+      "summary": "为频道消息添加表情表态",
+      "method": "PUT",
+      "path": "/channels/{channel_id}/messages/{message_id}/reactions/{type}/{id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/trans/emoji.html",
+      "sectionHeading": "机器人发表表情表态"
+    },
+    {
+      "name": "delete_reaction",
+      "aliases": [
+        "remove_reaction"
+      ],
+      "category": "表情表态",
+      "summary": "删除频道消息的表情表态",
+      "method": "DELETE",
+      "path": "/channels/{channel_id}/messages/{message_id}/reactions/{type}/{id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/trans/emoji.html",
+      "sectionHeading": "删除机器人发表的表情表态"
+    },
+    {
+      "name": "list_reaction_users",
+      "aliases": [
+        "get_reaction_users"
+      ],
+      "category": "表情表态",
+      "summary": "分页获取消息表情表态的用户列表",
+      "method": "GET",
+      "path": "/channels/{channel_id}/messages/{message_id}/reactions/{type}/{id}",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/trans/emoji.html",
+      "sectionHeading": "获取消息表情表态的用户列表"
+    },
+    {
+      "name": "respond_interaction",
+      "aliases": [
+        "put_interaction",
+        "on_interaction_result"
+      ],
+      "category": "互动",
+      "summary": "回应互动事件（type=11 消息按钮 / type=12 快捷菜单必须调用）",
+      "method": "PUT",
+      "path": "/interactions/{interaction_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/interactions_interaction_id.put.html"
+    },
+    {
+      "name": "get_menu",
+      "aliases": [
+        "get_custom_menu"
+      ],
+      "category": "自定义菜单",
+      "summary": "查询全局自定义菜单（仅单聊 C2C 生效）",
+      "method": "GET",
+      "path": "/v2/menu",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_menu.get.html"
+    },
+    {
+      "name": "set_menu",
+      "aliases": [
+        "put_menu",
+        "update_custom_menu"
+      ],
+      "category": "自定义菜单",
+      "summary": "修改全局自定义菜单（覆盖式，最多 10 个一级菜单）",
+      "method": "PUT",
+      "path": "/v2/menu",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_menu.put.html"
+    },
+    {
+      "name": "list_panels",
+      "aliases": [
+        "get_panels"
+      ],
+      "category": "指令面板",
+      "summary": "查询指令面板列表",
+      "method": "GET",
+      "path": "/v2/panels",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_panels.get.html"
+    },
+    {
+      "name": "create_panel",
+      "aliases": [
+        "post_panel"
+      ],
+      "category": "指令面板",
+      "summary": "创建指令面板（c2c/group/channel/dm，最多 20 个）",
+      "method": "POST",
+      "path": "/v2/panels",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_panels.post.html"
+    },
+    {
+      "name": "get_panel",
+      "aliases": [
+        "get_panel_detail"
+      ],
+      "category": "指令面板",
+      "summary": "查询指令面板详情",
+      "method": "GET",
+      "path": "/v2/panels/{panel_id}",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_panels_panel_id.get.html"
+    },
+    {
+      "name": "update_panel",
+      "aliases": [
+        "put_panel"
+      ],
+      "category": "指令面板",
+      "summary": "修改指令面板",
+      "method": "PUT",
+      "path": "/v2/panels/{panel_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_panels_panel_id.put.html"
+    },
+    {
+      "name": "delete_panel",
+      "aliases": [
+        "remove_panel"
+      ],
+      "category": "指令面板",
+      "summary": "删除指令面板",
+      "method": "DELETE",
+      "path": "/v2/panels/{panel_id}",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_panels_panel_id.delete.html"
+    },
+    {
+      "name": "update_panel_targets",
+      "aliases": [
+        "put_panel_target"
+      ],
+      "category": "指令面板",
+      "summary": "增删指令面板关联的用户/群（仅 specific 面板）",
+      "method": "PUT",
+      "path": "/v2/panels/{panel_id}/target",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/autogen/api/v2_panels_panel_id_target.put.html"
+    },
+    {
+      "name": "prepare_media_image",
+      "aliases": [
+        "media_image_prepare"
+      ],
+      "category": "素材管理",
+      "summary": "申请 Markdown 图片上传（返回 upload_id 与预签名 URL）",
+      "method": "POST",
+      "path": "/v2/media-images/prepare",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/material-management.html",
+      "sectionHeading": "申请图片上传"
+    },
+    {
+      "name": "complete_media_image",
+      "aliases": [
+        "media_image_complete"
+      ],
+      "category": "素材管理",
+      "summary": "完成 Markdown 图片上传，返回 qqbot-media:// 引用与 image_id",
+      "method": "POST",
+      "path": "/v2/media-images/complete",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/material-management.html",
+      "sectionHeading": "完成图片上传"
+    },
+    {
+      "name": "list_media_images",
+      "aliases": [
+        "get_media_images"
+      ],
+      "category": "素材管理",
+      "summary": "分页查询机器人有效 Markdown 图片素材",
+      "method": "GET",
+      "path": "/v2/media-images",
+      "readOnly": true,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/material-management.html",
+      "sectionHeading": "查询有效图片"
+    },
+    {
+      "name": "delete_media_image",
+      "aliases": [
+        "media_image_delete"
+      ],
+      "category": "素材管理",
+      "summary": "删除 Markdown 图片素材",
+      "method": "DELETE",
+      "path": "/v2/media-images/{image_id}/delete",
+      "readOnly": false,
+      "docUrl": "https://bot.q.qq.com/wiki/develop/api-v2/server-inter/message/material-management.html",
+      "sectionHeading": "删除图片"
+    }
+  ]
+}

@@ -1,0 +1,404 @@
+{
+  "_note": "Hand-written refinements merged over the doc-scraped catalog. Only the top message/media/interaction APIs need this; everything else stays doc-driven. Descriptions here replace the scraped intro.",
+  "apis": {
+    "send_c2c_message": {
+      "description": "向指定用户发送单聊消息。\n\n约束：\n- 被动回复有效时间 60 分钟，每条用户消息最多回复 4 次；msg_id 来自 C2C_MESSAGE_CREATE 的 d.id，msg_seq 在同一 msg_id 下必须唯一。\n- 主动消息频控：认证机器人 10 qps、未认证 5 qps 且 30 qpm；对单个好友 20 qpm，每人每天最多接收 1000 条。\n- msg_type：0=纯文本(content)、2=Markdown(markdown)、6=输入中(input_notify)、7=富媒体(media)。\n- 互动召回：用户主动对话后 30 天内可按 4 个周期各发 1 条，发送时置 is_wakeup=true（与 msg_id/event_id 互斥）。\n- 富媒体 file_info 必须来自 /v2/users/{user_openid}/files。",
+      "bodySchema": {
+        "properties": {
+          "msg_type": {
+            "type": "integer",
+            "enum": [
+              0,
+              2,
+              6,
+              7
+            ],
+            "description": "0=文本 2=Markdown 6=输入中 7=富媒体"
+          },
+          "msg_seq": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "同一 msg_id 下的回复序号，默认 1；重复 msg_id+msg_seq 会失败"
+          },
+          "markdown": {
+            "description": "msg_type=2 时填写；填写后 content 必须为空"
+          },
+          "media": {
+            "description": "msg_type=7 时填写 { file_info }"
+          },
+          "input_notify": {
+            "description": "msg_type=6 时填写 { input_type: 1, input_second: n }"
+          }
+        },
+        "required": [
+          "msg_type"
+        ]
+      },
+      "notes": [
+        "被动回复优先使用 msg_id；无 msg_id 时可用事件最外层 id 作为 event_id（支持 INTERACTION_CREATE / C2C_MSG_RECEIVE / FRIEND_ADD）。",
+        "发送本地文件请用 send_message 助手或 upload_media 助手，它会先走分片上传再自动填 media.file_info。"
+      ]
+    },
+    "send_group_message": {
+      "description": "向指定群发送消息，支持文本/Markdown/富媒体/内嵌键盘/引用。\n\n约束：\n- 被动回复有效时间 5 分钟，每条消息最多回复 5 次；msg_id 来自 GROUP_AT_MESSAGE_CREATE 等事件的 d.id，msg_seq 在同一 msg_id 下必须唯一。\n- 主动消息频控：认证机器人 60 qpm、未认证 30 qpm；对单个群 20 qpm，每群每天最多接收 1000 条。\n- msg_type：0=纯文本、2=Markdown、7=富媒体；群消息不支持流式。\n- 富媒体 file_info 必须来自 /v2/groups/{group_openid}/files，且仅能发到群聊。\n- 机器人被禁言或不在群内会分别返回 40054002 / 40054003。",
+      "bodySchema": {
+        "properties": {
+          "msg_type": {
+            "type": "integer",
+            "enum": [
+              0,
+              2,
+              7
+            ],
+            "description": "0=文本 2=Markdown 7=富媒体"
+          },
+          "msg_seq": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "同一 msg_id 下的回复序号，默认 1"
+          },
+          "markdown": {
+            "description": "msg_type=2 时填写；填写后 content 必须为空"
+          },
+          "media": {
+            "description": "msg_type=7 时填写 { file_info }"
+          }
+        },
+        "required": [
+          "msg_type"
+        ]
+      },
+      "notes": [
+        "同一 msg_id + msg_seq 重复发送会失败，需要回复多次时递增 msg_seq。",
+        "主动消息超频返回 40034100；被动回复超时/超次返回 40034128。"
+      ]
+    },
+    "stream_c2c_message": {
+      "description": "流式分批发送单聊消息（仅 C2C）。同一 stream_msg_id 下 index 从 0 递增；首片不传 stream_msg_id，响应 id 即 stream_msg_id，后续分片必须携带。input_state=1 表示生成中、10 表示结束；input_mode=replace 时 content_raw 必须是当前全量正文，append 则拼接增量。",
+      "bodySchema": {
+        "properties": {
+          "input_mode": {
+            "type": "string",
+            "enum": [
+              "append",
+              "replace"
+            ],
+            "description": "append（默认）拼接；replace 为全量替换"
+          },
+          "input_state": {
+            "type": "integer",
+            "enum": [
+              1,
+              10
+            ],
+            "description": "1=生成中，10=生成结束"
+          },
+          "index": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "分片序号，从 0 递增"
+          },
+          "content_type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "markdown"
+            ],
+            "description": "内容格式"
+          },
+          "content_raw": {
+            "type": "string",
+            "description": "当前分片/全量正文"
+          },
+          "stream_msg_id": {
+            "type": "string",
+            "description": "首片响应返回，后续分片必填"
+          },
+          "msg_seq": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "消息序号，用于去重"
+          },
+          "is_wakeup": {
+            "type": "boolean",
+            "description": "是否为互动召回消息"
+          }
+        },
+        "required": [
+          "input_state",
+          "index"
+        ]
+      },
+      "notes": [
+        "最后一片必须 input_state=10，否则客户端会一直处于生成中状态。"
+      ]
+    },
+    "send_channel_message": {
+      "description": "向 channel_id 指定的子频道发送消息，支持文本/embed/ark/图片/Markdown/引用。\n\n约束：\n- content、embed、ark、image/file_image、markdown 至少有一个。\n- 被动回复有效期 5 分钟；主动消息默认每天每个子频道 20 条、每个频道每天最多 2 个子频道；同子频道限 5 条/秒。\n- 发送要求机器人保持 WebSocket 网关在线，否则报 304018。\n- 本地图片用 multipart/form-data 的 file_image 字段（send_message 助手已支持）；image 字段是公网 URL。\n- 传入 markdown 时 content/ark 必须为空；markdown+keyboard 组合受平台限制。",
+      "notes": [
+        "multipart 请求中对象/数组字段需要序列化为 JSON 字符串。",
+        "私信主动消息：每机器人每天对单用户 2 条、累计 200 条；被动消息不限条数。"
+      ]
+    },
+    "send_dm_message": {
+      "description": "发送频道私信消息（需先 create_dm_session 建立会话）。参数与 send_channel_message 一致。每机器人每天对单个用户最多 2 条主动消息、累计 200 条；被动消息不限条数。",
+      "notes": [
+        "guild_id 是私信会话 id（创建私信时返回），不是源频道 id。"
+      ],
+      "bodySchema": {
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "embed": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "ark": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "message_reference": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "image": {
+            "type": "string",
+            "description": "公网图片 URL"
+          },
+          "msg_id": {
+            "type": "string"
+          },
+          "event_id": {
+            "type": "string"
+          },
+          "markdown": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "keyboard": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "recall_group_message": {
+      "description": "撤回机器人在群内发送的消息。消息发送超过 2 分钟后不可撤回（40064004）；机器人需为群管理员或消息发送者。"
+    },
+    "recall_c2c_message": {
+      "description": "撤回机器人自己发送的单聊消息。"
+    },
+    "recall_channel_message": {
+      "description": "撤回子频道消息，只能撤回机器人自己发送的消息；hidetip=true 可隐藏“消息已撤回”小灰条。"
+    },
+    "upload_group_file": {
+      "description": "群聊富媒体上传，返回 file_info 供 send_group_message 的 media 字段使用。\n\n三种方式：\n1. url：平台下载转存（可能因网络失败）。\n2. file_data：直接传二进制（≤5MB；文档未明确编码，建议本机文件走分片）。\n3. upload_id：先 upload_prepare + 分片 PUT + upload_part_finish，再调用本接口合并（推荐）。\n\nfile_type：1=图片(png/jpg，软限 20MB)、2=视频(mp4，30MB)、3=语音(silk，20MB)、4=文件(200MB)；硬限 200MB，超软限自动降级为文件。srv_send_msg=true 会直接发送并占用主动消息频次。",
+      "bodySchema": {
+        "properties": {
+          "file_type": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "srv_send_msg": {
+            "type": "boolean",
+            "description": "true=上传后直接发送；false=仅返回 file_info"
+          }
+        }
+      }
+    },
+    "upload_c2c_file": {
+      "description": "单聊富媒体上传，返回 file_info 供 send_c2c_message 的 media 字段使用。单聊与群聊上传互相隔离，不能跨场景使用。其余规则同 upload_group_file。",
+      "bodySchema": {
+        "properties": {
+          "file_type": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "srv_send_msg": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "prepare_group_upload": {
+      "description": "群聊富媒体分片上传第一步：提交 file_type/file_size/file_name/md5/sha1/md5_10m，返回 upload_id、block_size、parts[].presigned_url 与 upload_config。随后逐片 PUT 到 presigned_url，并对每片调用 finish_group_upload_part；全部完成后带 upload_id 调 upload_group_file 合并。md5_10m 是文件前 10002432 字节的 MD5（文件更小时为全文 MD5）。"
+    },
+    "prepare_c2c_upload": {
+      "description": "单聊富媒体分片上传第一步，流程同 prepare_group_upload，完成后带 upload_id 调 upload_c2c_file 合并。"
+    },
+    "finish_group_upload_part": {
+      "description": "通知服务端群聊富媒体某分片已上传完成。需在每片 PUT 成功后调用；全部完成后用 upload_id 调 upload_group_file 合并。"
+    },
+    "finish_c2c_upload_part": {
+      "description": "通知服务端单聊富媒体某分片已上传完成，全部完成后用 upload_id 调 upload_c2c_file 合并。"
+    },
+    "respond_interaction": {
+      "description": "回应互动事件（INTERACTION_CREATE）。仅 type=11（消息按钮）与 type=12（快捷菜单）必须回应，否则客户端 loading 直到超时；同一 interaction_id 只能回应一次。interaction_id 从事件 d.id 获取，且不带 “INTERACTION_CREATE:” 前缀。",
+      "bodySchema": {
+        "properties": {
+          "code": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "description": "0=成功 1=操作失败 2=操作频繁 3=重复操作 4=没有权限 5=仅管理员操作"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      }
+    },
+    "approve_group_join_request": {
+      "description": "审批入群申请。op=approve 通过；op=decline 拒绝，可填 reject_reason 并选择 add_to_member_blacklist 同步拉黑。join_request_id 来自 join_request_list 或 GROUP_JOIN_REQUEST 事件。",
+      "bodySchema": {
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "approve",
+              "decline"
+            ]
+          }
+        },
+        "required": [
+          "op"
+        ]
+      }
+    },
+    "update_group_blacklist": {
+      "description": "群黑名单操作。op=add 拉黑（目标在群内时无法拉黑）、op=del 移出黑名单；member_openids 单次最多 20 个。仅白名单机器人可用（11253）。",
+      "bodySchema": {
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "add",
+              "del"
+            ]
+          }
+        },
+        "required": [
+          "op",
+          "member_openids"
+        ]
+      }
+    },
+    "set_group_member_mute": {
+      "description": "设置群成员禁言。members 每项 op=add/update/del；add/update 需 mute_expire_at（RFC3339），只能操作普通成员（不能操作群主/管理员/机器人），单次最多 20 个成员。"
+    },
+    "generate_share_link": {
+      "description": "生成机器人分享链接，用于邀请用户添加机器人。callback_data 会透传给开发者，最长 32 字符。无持久化副作用，因此标记为只读。"
+    },
+    "patch_channel_message": {
+      "description": "修改机器人自己发送的频道消息（旧版接口，当前 v2 文档索引未列出，可能不可用）。通常用于更新 markdown/keyboard 内容。",
+      "bodySchema": {
+        "properties": {
+          "msg_id": {
+            "type": "string",
+            "description": "要回复的消息 id（可选）"
+          },
+          "event_id": {
+            "type": "string",
+            "description": "要回复的事件 id（可选）"
+          },
+          "markdown": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "keyboard": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "get_guild_api_permissions": {
+      "description": "获取机器人在频道内可用的 API 权限列表，用于排查 11253/11264 等权限问题。"
+    },
+    "request_guild_api_permission": {
+      "description": "生成/发送机器人在频道内的接口权限授权链接，供管理员点击授权。"
+    },
+    "control_channel_audio": {
+      "description": "控制子频道音频。仅音频类机器人可用，需向平台申请权限。status：0=开始播放，1=暂停，2=继续，3=停止。",
+      "bodySchema": {
+        "properties": {
+          "audio_url": {
+            "type": "string",
+            "description": "音频 URL"
+          },
+          "text": {
+            "type": "string",
+            "description": "播放状态文本"
+          },
+          "status": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "description": "0=开始 1=暂停 2=继续 3=停止"
+          }
+        },
+        "required": [
+          "audio_url",
+          "status"
+        ]
+      },
+      "notes": [
+        "仅音频类机器人可用；调用前需平台开通权限。"
+      ]
+    },
+    "create_dm_session": {
+      "description": "机器人可与同一频道内的成员建立私信会话；机器人和用户必须存在共同频道。返回 guild_id、channel_id、create_time，其中 guild_id 作为后续 send_dm_message/recall_dm_message 的 dms id。"
+    },
+    "recall_dm_message": {
+      "description": "撤回机器人发送的频道私信；hidetip=true 可隐藏撤回提示小灰条。"
+    },
+    "add_reaction": {
+      "description": "为频道消息添加表情表态。type=1 系统表情（id 如 4），type=2 emoji（id 为 emoji 的 unicode 编码）。"
+    },
+    "delete_reaction": {
+      "description": "删除机器人自己为频道消息添加的表情表态。"
+    },
+    "list_reaction_users": {
+      "description": "分页获取某条消息某个表情表态的用户列表（cookie 游标 + limit）。"
+    },
+    "prepare_media_image": {
+      "description": "申请 Markdown 图片上传：提交文件名/大小/MIME/md5/sha1，返回 upload_id 与预签名 URL（用 HTTP PUT 直传二进制），上传任务 4 小时内有效。单张 ≤10MB，支持 png/jpeg/gif/webp。"
+    },
+    "complete_media_image": {
+      "description": "完成 Markdown 图片上传：携带 upload_id 与 PUT 返回的 ETag（文件 MD5）换取 image_id、qqbot-media:// 引用与短时预览 URL。该引用可直接写进 Markdown 消息的图片语法。"
+    },
+    "get_gateway_bot": {
+      "description": "获取带分片的 WSS 接入点，返回建议 shard 数、当前连接数限制 session_start_limit（24 小时可创建 Session 数、剩余数、重置时间、每 5s 并发数）。"
+    },
+    "get_bot_info": {
+      "description": "获取当前机器人详情（id、username、avatar、union_openid 等）。"
+    },
+    "get_gateway": {
+      "description": "获取通用 WSS 接入点。事件流或频道消息发送前可用它确认网关地址。"
+    },
+    "get_menu": {
+      "description": "查询当前机器人全局自定义菜单配置（仅 C2C 单聊生效）。"
+    }
+  }
+}
