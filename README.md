@@ -2,7 +2,7 @@
 
 把 QQ 官方机器人 OpenAPI 封装成 **MCP 服务**和**中文交互式 CLI**。不记接口路径，也能在终端或 Agent 里发消息、管理群/频道、上传文件、接收事件。
 
-> 社区实现，不是腾讯官方产品。QQ API 可能调整，升级前请关注 [覆盖清单](docs/COVERAGE.md)。
+> 社区实现，不是腾讯官方产品。QQ API 可能调整，升级前请关注 [覆盖清单](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/COVERAGE.md)。
 
 ## 关于
 
@@ -40,7 +40,7 @@ npm run build
 sudo ./deploy/install.sh
 ```
 
-完整安装说明见 [docs/INSTALL.md](docs/INSTALL.md)。
+完整安装说明见 [docs/INSTALL.md](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/INSTALL.md)。
 
 ## 配置
 
@@ -52,10 +52,10 @@ QQBOT_APP_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 QQBOT_MCP_MODE=read
 ```
 
-- AppID/AppSecret 在 [QQ 开放平台](https://q.qq.com/) 的机器人「开发设置」中获取，步骤见 [docs/CREDENTIALS.md](docs/CREDENTIALS.md)。
+- AppID/AppSecret 在 [QQ 开放平台](https://q.qq.com/) 的机器人「开发设置」中获取，步骤见 [docs/CREDENTIALS.md](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/CREDENTIALS.md)。
 - 本机安装后编辑 `/etc/qqbot-mcp.env`（权限 `600`）。
 - MCP 客户端可把变量写进 `env`。
-- 完整变量表见 [docs/CONFIGURATION.md](docs/CONFIGURATION.md)。
+- 完整变量表见 [docs/CONFIGURATION.md](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/CONFIGURATION.md)。
 
 ## 使用
 
@@ -92,7 +92,7 @@ qqbot> exit
 | `mcp` | 打印 MCP 客户端配置 |
 | `exit` / `quit` | 退出 |
 
-完整命令和示例见 [docs/CLI.md](docs/CLI.md)。
+完整命令和示例见 [docs/CLI.md](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/CLI.md)。
 
 ### 在 MCP 客户端中使用
 
@@ -137,17 +137,17 @@ qqbot> exit
 
 ## 文档
 
-- [CLI 命令](docs/CLI.md)
-- [配置](docs/CONFIGURATION.md)
-- [获取 AppID/AppSecret](docs/CREDENTIALS.md)
-- [工具参考](docs/TOOLS.md)
-- [覆盖清单](docs/COVERAGE.md)
-- [架构](docs/ARCHITECTURE.md)
-- [安装](docs/INSTALL.md)
-- [开发与验收](docs/DEVELOPMENT.md)
-- [发布](docs/PUBLISHING.md)
-- [上游同步](docs/UPSTREAM-SYNC.md)
+- [CLI 命令](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/CLI.md)
+- [配置](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/CONFIGURATION.md)
+- [获取 AppID/AppSecret](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/CREDENTIALS.md)
+- [工具参考](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/TOOLS.md)
+- [覆盖清单](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/COVERAGE.md)
+- [架构](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/ARCHITECTURE.md)
+- [安装](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/INSTALL.md)
+- [开发与验收](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/DEVELOPMENT.md)
+- [发布](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/PUBLISHING.md)
+- [上游同步](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/docs/UPSTREAM-SYNC.md)
 
 ## 许可证
 
-MIT，见 [LICENSE](LICENSE)。
+MIT，见 [LICENSE](https://github.com/Pheobe-Southwood/qqbot-mcp/blob/main/LICENSE)。
